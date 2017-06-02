@@ -60,6 +60,21 @@
                 android:layout_marginTop="30dp"
                 android:textColor="@color/FontysWhite"/>
 
+            <Button
+                android:id="@+id/btnReturnDex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/btnSaveName"
+                android:layout_alignLeft="@+id/btnSaveName"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/btnSaveName"
+                android:layout_alignStart="@+id/btnSaveName"
+                android:layout_marginBottom="29dp"
+                android:background="@color/FontysPurple"
+                android:textColor="@color/FontysWhite"
+                android:text="Return to teacher Dex"
+                android:visibility="invisible"/>
+
         </RelativeLayout>
 
     </LinearLayout>

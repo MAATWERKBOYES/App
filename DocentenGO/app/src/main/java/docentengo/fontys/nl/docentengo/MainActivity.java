@@ -73,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button returnButton = (Button)findViewById(R.id.btnReturnDex);
+        returnButton.setVisibility(View.VISIBLE);
+        returnButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenTeacherDex((User)getIntent().getExtras().getSerializable("BattleMode"));
+            }
+        });
     }
 
     private void OpenBattleScreen(String teacherCode){
