@@ -10,6 +10,7 @@
 
     <TextView
         android:id="@+id/tvDexName"
+        android:textSize="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TeacherDex"
