@@ -36,6 +36,7 @@
             android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:background="@color/FontysPurple"
+            android:textColor="@color/FontysWhite"
             android:text="Enter code" />
 
         <Button
@@ -46,6 +47,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@color/FontysPurple"
+            android:textColor="@color/FontysWhite"
             android:text="Rankings" />
     </LinearLayout>
 </LinearLayout>

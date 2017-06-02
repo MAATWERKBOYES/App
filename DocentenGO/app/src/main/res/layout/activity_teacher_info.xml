@@ -99,6 +99,7 @@
         android:background="@color/FontysPurple"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:text="Return to TeacherDex" />
+        android:text="Return to TeacherDex"
+        android:textColor="@color/FontysWhite"/>
 
 </LinearLayout>

@@ -29,5 +29,6 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:layout_gravity="center"
-        android:background="@color/FontysPurple" />
+        android:background="@color/FontysPurple"
+        android:textColor="@color/FontysWhite"/>
 </LinearLayout>

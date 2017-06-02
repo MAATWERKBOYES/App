@@ -64,5 +64,6 @@
         android:layout_height="wrap_content"
         android:background="@color/FontysPurple"
         android:layout_gravity="center"
-        android:text="Catch" />
+        android:text="Catch"
+        android:textColor="@color/FontysWhite"/>
 </LinearLayout>
