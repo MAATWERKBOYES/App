@@ -1,10 +1,14 @@
 package docentengo.fontys.nl.docentengo;
 
 
-import android.provider.Settings;
+//Never forgetti
+//http://145.93.96.177:8080/people
+//http://145.93.96.177:8080/question
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,21 +16,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import Business.User;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private String secureID;
+    private final String URL = "http://145.93.96.177:8080/";
+    RestTemplate client;
+    private List<Person> people;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-    //http://145.93.96.177:8080/people
+        this.client = new RestTemplate();
+        client.getMessageConverters().add(new StringHttpMessageConverter());
+        Async async = new Async();
+        async.execute();
 
         Button submitButton = (Button)findViewById(R.id.btnSaveName);
         EditText inputField = (EditText)findViewById(R.id.txtInput);
@@ -123,8 +136,18 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-
     }
 
 
+
+    private class Async extends AsyncTask<Void, Void, List<Question>> {
+        @Override
+        protected List<Question> doInBackground(Void... params) {
+            //TODO change this to user for login
+            System.out.println("wat.");
+            List<Question> temp = Arrays.asList(client.getForObject(URL+"question",Question[].class));
+            return temp;
+        }
+
+    }
 }
