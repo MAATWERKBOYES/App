@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import Business.User;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -29,11 +31,15 @@ public class MainActivity extends AppCompatActivity {
 
     //#ToDo Jeroen hier zorgen dat je als je al eens bent ingelogt gelijk doorgaat, in this case no input required
     private void initiateHomeScreen(Button submitButton, final EditText inputField){
+        //ifSignedIn call OpenTeacherDex with my ID/Username
         submitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(testInput(inputField.getText().toString())){
-                    OpenTeacherDex(inputField.getText().toString());
+                    //#getMyAndroidID
+                    String myID = "0";
+                    User newUser = new User(myID, inputField.getText().toString());
+                    OpenTeacherDex(newUser);
                 }else{
                     showAlertDialog("Missing input", "please enter a username");
                 }
@@ -41,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void OpenTeacherDex(String userName){
+    private void OpenTeacherDex(User currentUser){
         Intent intent = new Intent(getApplicationContext(),TeacherDexActivity.class);
-        intent.putExtra("UserName", userName);
+        intent.putExtra("CurrentUser", currentUser);
         startActivity(intent);
         finish();
     }
