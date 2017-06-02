@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initiateBattleScreen(Button submitButton, final EditText inputField){
         submitButton.setText("Battle");
-        inputField.setText("Enter the code of the teacher you found");
-        TextView textView = (TextView)findViewById(R.id.tvEnterView);
+        TextView message = (TextView)findViewById(R.id.tvEnterView);
+        message.setText("Enter the code of the teacher you found:");
 
         submitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void OpenBattleScreen(String teacherCode){
         Intent intent = new Intent(getApplicationContext(),BattleActivity.class);
-        intent.putExtra("UserName", (String)getIntent().getExtras().getSerializable("BattleMode"));
+        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("BattleMode"));
         intent.putExtra("TeacherCode", teacherCode);
         startActivity(intent);
         finish();
