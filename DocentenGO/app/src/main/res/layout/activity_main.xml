@@ -28,11 +28,12 @@
                 android:id="@+id/tvEnterView"
                 android:layout_width="227dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="11dp"
                 android:layout_weight="1"
                 android:text="Enter your username:"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="0dp" />
+                android:gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/txtInput"
+                android:layout_alignStart="@+id/txtInput" />
 
             <EditText
                 android:id="@+id/txtInput"
