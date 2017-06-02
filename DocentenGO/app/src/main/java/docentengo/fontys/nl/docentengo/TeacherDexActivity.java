@@ -25,6 +25,7 @@ public class TeacherDexActivity extends AppCompatActivity {
         System.out.println("set the dex name");
         //#ToDo load the TearcherDex content(for this user)
         createEnterCodeButtonEvent();
+        createRankingsButtonEvent();
     }
 
     private void retrieveUser(){
@@ -47,6 +48,19 @@ public class TeacherDexActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.putExtra("BattleMode", signedUser);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void createRankingsButtonEvent(){
+        Button btnNavigateRanking = (Button)findViewById(R.id.btnRanking);
+        btnNavigateRanking.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),RankingActivity.class);
+                intent.putExtra("CurrentUser", signedUser);
                 startActivity(intent);
                 finish();
             }
