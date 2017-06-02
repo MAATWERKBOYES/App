@@ -38,7 +38,12 @@ public class TeacherDexActivity extends AppCompatActivity {
 
     private void setPersonalDexName(){
         TextView devName = (TextView)findViewById(R.id.tvDexName);
-        devName.setText(signedUser.getUserName() + "'s Dex");
+        String username = signedUser.getUserName();
+        if("sS".indexOf(username.substring(username.length() - 1)) > -1 ){
+            devName.setText(signedUser.getUserName() + "' Dex");
+        }else{
+            devName.setText(signedUser.getUserName() + "'s Dex");
+        }
     }
 
     private void createEnterCodeButtonEvent(){
