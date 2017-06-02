@@ -38,6 +38,7 @@
         android:layout_weight="0.14" />
 
     <TableLayout
+        android:id="@+id/tblQuestions"
         android:layout_width="match_parent"
         android:layout_height="146dp">
 
