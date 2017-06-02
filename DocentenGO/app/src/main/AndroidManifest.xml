@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".TeacherDexActivity" />
         <activity android:name=".BattleActivity" />
-        <activity android:name=".TeacherInfoActivity"></activity>
+        <activity android:name=".TeacherInfoActivity" />
+        <activity android:name=".RankingActivity"></activity>
     </application>
 
 </manifest>
