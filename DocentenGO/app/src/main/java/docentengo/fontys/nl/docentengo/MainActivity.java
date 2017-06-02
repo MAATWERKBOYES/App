@@ -1,5 +1,7 @@
 package docentengo.fontys.nl.docentengo;
 
+
+import android.provider.Settings;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,12 +14,19 @@ import android.widget.TextView;
 
 import Business.User;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private String secureID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+    //http://145.93.96.177:8080/people
 
         Button submitButton = (Button)findViewById(R.id.btnSaveName);
         EditText inputField = (EditText)findViewById(R.id.txtInput);
@@ -114,5 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+
     }
+
+
 }
