@@ -49,6 +49,12 @@ public class APIConnection
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+/*
+            secureID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            APIConnection connection = new APIConnection();
+            List<Person> People = connection.getPeople();
+            */
         }
 
     }

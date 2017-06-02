@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="docentengo.fontys.nl.docentengo.RankingActivity"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rankings:"
+        android:textSize="30dp"
+        android:gravity="center"/>
+
+    <ListView
+        android:id="@+id/lvRankings"
+        android:layout_width="match_parent"
+        android:layout_height="404dp"
+        android:layout_weight="0.48" />
+
+    <Button
+        android:id="@+id/btnReturnDex"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:text="Return to TeacherDex"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_gravity="center"
+        android:background="@color/FontysPurple"
+        android:textColor="@color/FontysWhite"/>
+</LinearLayout>
