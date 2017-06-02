@@ -24,6 +24,9 @@ public class TeacherDexActivity extends AppCompatActivity {
         setPersonalDexName();
         System.out.println("set the dex name");
         //#ToDo load the TearcherDex content(for this user)
+
+
+
         createEnterCodeButtonEvent();
         createRankingsButtonEvent();
     }
