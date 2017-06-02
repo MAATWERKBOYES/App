@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TeacherDexActivity" />
-        <activity android:name=".BattleActivity"></activity>
+        <activity android:name=".BattleActivity" />
+        <activity android:name=".TeacherInfoActivity"></activity>
     </application>
 
 </manifest>
