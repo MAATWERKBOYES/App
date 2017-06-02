@@ -92,7 +92,7 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/returnDex"
+        android:id="@+id/btnReturnDex"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -100,6 +100,6 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="Return to TeacherDex"
-        android:textColor="@color/FontysWhite"/>
+        android:textColor="@color/FontysWhite" />
 
 </LinearLayout>
