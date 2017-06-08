@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -27,7 +28,6 @@ public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;
     private RestTemplate client;
     private ListView lvTeacherDex;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,18 @@ public class TeacherDexActivity extends AppCompatActivity {
                 ,android.R.id.text1
                 ,teacherList);
         lvTeacherDex.setAdapter(adapter);
+
+        lvTeacherDex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(getApplicationContext(),TeacherInfoActivity.class);
+                intent.putExtra("selectedTeacher",(Person)parent.getAdapter().getItem(position));
+                intent.putExtra("CurrentUser", signedUser);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void retrieveUser(){

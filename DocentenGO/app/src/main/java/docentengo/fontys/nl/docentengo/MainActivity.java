@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
         Async async = new Async();
-     //   async.execute();
+        async.execute();
 
 
         Button submitButton = (Button)findViewById(R.id.btnSaveName);
@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 if(userID.equals(user.getiD()))
                 {
                     OpenTeacherDex(user);
+                    break;
                 }
             }
         }

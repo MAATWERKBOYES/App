@@ -42,9 +42,6 @@ public class RankingActivity extends AppCompatActivity {
         client.getMessageConverters().add(new StringHttpMessageConverter());
         RankingActivity.Async async = new RankingActivity.Async();
         async.execute();
-
-        ArrayAdapter<User> adapter = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1,android.R.id.text1,userList);
-        lvRankings.setAdapter(adapter);
     }
 
     private void retrieveUser(){
@@ -86,6 +83,14 @@ public class RankingActivity extends AppCompatActivity {
                 .show();
     }
 
+    public void setAdapter(List<User> teacherList) {
+        ArrayAdapter<User> adapter = new ArrayAdapter<>(this
+                , android.R.layout.simple_list_item_1
+                , android.R.id.text1
+                , teacherList);
+        lvRankings.setAdapter(adapter);
+    }
+
     private class Async extends AsyncTask<Void, Void, List<User>> {
         @Override
         protected List<User> doInBackground(Void... params) {
@@ -98,7 +103,7 @@ public class RankingActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<User> users) {
-            userList.addAll(users);
+            setAdapter(users);
         }
     }
 }
