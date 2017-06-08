@@ -143,10 +143,8 @@ public class TeacherDexActivity extends AppCompatActivity {
 
         @Override
         protected List<Person> doInBackground(Void... params) {
-            //TODO put to textboxes
             System.out.println("wat.");
             List<Person> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people", Person[].class));
-            //TODO Select correct question
             return temp;
         }
 

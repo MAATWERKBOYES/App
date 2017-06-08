@@ -38,88 +38,87 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
         Async async = new Async();
         async.execute();
 
 
-        Button submitButton = (Button)findViewById(R.id.btnSaveName);
-        EditText inputField = (EditText)findViewById(R.id.txtInput);
+        Button submitButton = (Button) findViewById(R.id.btnSaveName);
+        EditText inputField = (EditText) findViewById(R.id.txtInput);
         //determine whether or not it's the app booting up, it can also be redirecting to the enter teacher code screen
-        if(!getIntent().hasExtra("BattleMode")){
+        if (!getIntent().hasExtra("BattleMode")) {
             initiateHomeScreen(submitButton, inputField);
-        }else if(getIntent().hasExtra("BattleMode")){
+        } else if (getIntent().hasExtra("BattleMode")) {
             initiateBattleScreen(submitButton, inputField);
         }
     }
 
     //#ToDo Jeroen hier zorgen dat je als je al eens bent ingelogt gelijk doorgaat, in this case no input required
-    private void initiateHomeScreen(Button submitButton, final EditText inputField){
+    private void initiateHomeScreen(Button submitButton, final EditText inputField) {
         //ifSignedIn call OpenTeacherDex with my ID/Username
         submitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(testInput(inputField.getText().toString())){
+                if (testInput(inputField.getText().toString())) {
                     //#getMyAndroidID
                     String myID = "0";
                     User newUser = new User(myID, inputField.getText().toString());
                     //TODO create user in db
                     OpenTeacherDex(newUser);
-                }else{
+                } else {
                     showAlertDialog("Missing input", "please enter a username");
                 }
             }
         });
     }
 
-    private void OpenTeacherDex(User currentUser){
-        Intent intent = new Intent(getApplicationContext(),TeacherDexActivity.class);
+    private void OpenTeacherDex(User currentUser) {
+        Intent intent = new Intent(getApplicationContext(), TeacherDexActivity.class);
         intent.putExtra("CurrentUser", currentUser);
         startActivity(intent);
         finish();
     }
 
-    private void initiateBattleScreen(Button submitButton, final EditText inputField){
+    private void initiateBattleScreen(Button submitButton, final EditText inputField) {
         submitButton.setText("Battle");
-        TextView message = (TextView)findViewById(R.id.tvEnterView);
+        TextView message = (TextView) findViewById(R.id.tvEnterView);
         message.setText("Enter the code of the teacher you found:");
 
         submitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!testInput(inputField.getText().toString())){
+                if (!testInput(inputField.getText().toString())) {
                     showAlertDialog("Missing input", "please enter the Teacher code.");
-                }else if(1==2){
+                } else if (1 == 2) {
                     //#ToDo contact server and check if the teacher code exists
                     showAlertDialog("Invallid input", "The entered teacher code was not vallid.");
-                }else{
+                } else {
                     OpenBattleScreen(inputField.getText().toString());
                 }
             }
         });
 
-        Button returnButton = (Button)findViewById(R.id.btnReturnDex);
+        Button returnButton = (Button) findViewById(R.id.btnReturnDex);
         returnButton.setVisibility(View.VISIBLE);
         returnButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OpenTeacherDex((User)getIntent().getExtras().getSerializable("BattleMode"));
+                OpenTeacherDex((User) getIntent().getExtras().getSerializable("BattleMode"));
             }
         });
     }
 
-    private void OpenBattleScreen(String teacherCode){
-        Intent intent = new Intent(getApplicationContext(),BattleActivity.class);
+    private void OpenBattleScreen(String teacherCode) {
+        Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
         intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("BattleMode"));
         intent.putExtra("TeacherCode", teacherCode);
         startActivity(intent);
         finish();
     }
 
-    private boolean testInput(String stringToTest){
-        if(stringToTest.equals(null) || "".equals(stringToTest)){
+    private boolean testInput(String stringToTest) {
+        if (stringToTest.equals(null) || "".equals(stringToTest)) {
             return false;
         }
         return true;
@@ -127,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Shows an alert dialog
-     * @param title of the dialog
+     *
+     * @param title   of the dialog
      * @param message of the dialog
      */
     private void showAlertDialog(String title, String message) {
@@ -144,26 +144,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private class Async extends AsyncTask<Void, Void, List<User>> {
+    private class Async extends AsyncTask<Void, Void, User> {
         @Override
-        protected List<User> doInBackground(Void... params) {
-            List<User> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL()+"user",User[].class));
+        protected User doInBackground(Void... params) {
+            String userID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            User temp = client.getForObject(APIConnection.getAPIConnectionInformationURL() + "user/" + userID, User.class);
             return temp;
         }
 
         @Override
-        protected void onPostExecute(List<User> users) {
-            super.onPostExecute(users);
-          String userID =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            for(User user : users)
-            {
-                if(userID.equals(user.getiD()))
-                {
-                    OpenTeacherDex(user);
-                    break;
-                }
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
+            if (user == null) {
+                OpenTeacherDex(user);
             }
         }
     }
 }
+
+
