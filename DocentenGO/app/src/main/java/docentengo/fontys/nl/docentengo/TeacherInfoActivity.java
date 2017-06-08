@@ -64,7 +64,9 @@ public class TeacherInfoActivity extends AppCompatActivity {
             teacherPicture.setBackgroundResource(R.drawable.luuk);
             name.setText(person.getDisplayName());
             occupation.setText(person.getDepartment());
-            title.setText(person.getPersonalTitle().toString());
+            if(person.getPersonalTitle() != null){
+                title.setText(person.getPersonalTitle().toString());
+            }
             if(person.getPresent()){
                 present.setText("A wild " + person.getSurName() + " appeared...");
             }else{
