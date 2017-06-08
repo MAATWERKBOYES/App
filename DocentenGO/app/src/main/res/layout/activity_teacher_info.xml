@@ -64,10 +64,10 @@
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Speciality:" />
+                android:text="Title:" />
 
             <TextView
-                android:id="@+id/txtTeacherSpeciality"
+                android:id="@+id/txtTeacherTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="" />
@@ -81,10 +81,10 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Weakness:" />
+                android:text="Present:" />
 
             <TextView
-                android:id="@+id/txtTeacherWeakness"
+                android:id="@+id/txtTeacherPresent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="" />

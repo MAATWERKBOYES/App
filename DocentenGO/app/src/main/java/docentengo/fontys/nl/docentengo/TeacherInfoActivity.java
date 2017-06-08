@@ -1,14 +1,19 @@
 package docentengo.fontys.nl.docentengo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +30,7 @@ public class TeacherInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_info);
         createButtonReturnDexEvent();
+        loadTeacherIntoGUI();
 
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
@@ -43,6 +49,48 @@ public class TeacherInfoActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void loadTeacherIntoGUI(){
+        if(getIntent().hasExtra("selectedTeacher")){
+            Person person = (Person)getIntent().getExtras().getSerializable("selectedTeacher");
+            ImageView teacherPicture = (ImageView)findViewById(R.id.imgTeacher);
+            TextView name = (TextView)findViewById(R.id.txtTeacherName);
+            TextView occupation = (TextView)findViewById(R.id.txtTeacherOccupation);
+            TextView title = (TextView)findViewById(R.id.txtTeacherTitle);
+            TextView present = (TextView)findViewById(R.id.txtTeacherPresent);
+
+            //#ToDo variable image not hardcoded
+            teacherPicture.setBackgroundResource(R.drawable.Luuk);
+            name.setText(person.getDisplayName());
+            occupation.setText(person.getDepartment());
+            title.setText(person.getPersonalTitle().toString());
+            if(person.getPresent()){
+                present.setText("A wild " + person.getSurName() + " appeared...");
+            }else{
+                present.setText(person.getSurName() + " got away safely");
+            }
+        }else if(!getIntent().hasExtra("CurrentUser")){
+            showAlertDialog("No teacher", "The screen was loaded without there being a selected teacher");
+        }
+    }
+
+    /**
+     * Shows an alert dialog
+     * @param title of the dialog
+     * @param message of the dialog
+     */
+    private void showAlertDialog(String title, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private class Async extends AsyncTask<Void, Void, List<Person>> {
