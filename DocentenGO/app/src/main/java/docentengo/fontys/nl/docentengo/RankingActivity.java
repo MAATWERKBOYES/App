@@ -3,15 +3,27 @@ package docentengo.fontys.nl.docentengo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
+
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
 
 import Business.User;
 
 public class RankingActivity extends AppCompatActivity {
     private User signedUser;
+    private ListView lvRankings;
+    private final String URL = "http://145.93.96.177:8080/";
+    RestTemplate client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +32,12 @@ public class RankingActivity extends AppCompatActivity {
         retrieveUser();
         //#ToDo fill list with rankings
         createReturnDexButtonEvent();
+        lvRankings = (ListView) findViewById(R.id.lvRankings);
+
+        this.client = new RestTemplate();
+        client.getMessageConverters().add(new StringHttpMessageConverter());
+        RankingActivity.Async async = new RankingActivity.Async();
+        async.execute();
     }
 
     private void retrieveUser(){
@@ -59,5 +77,17 @@ public class RankingActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    private class Async extends AsyncTask<Void, Void, List<User>> {
+        @Override
+        protected List<User> doInBackground(Void... params) {
+            //TODO change this to rankings
+            System.out.println("wat.");
+            List<User> temp = Arrays.asList(client.getForObject(URL + "user", User[].class));
+            //TODO sort by score
+            return temp;
+        }
+
     }
 }

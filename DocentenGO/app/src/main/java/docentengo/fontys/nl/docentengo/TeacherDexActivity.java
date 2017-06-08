@@ -3,16 +3,25 @@ package docentengo.fontys.nl.docentengo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
+
 import Business.User;
 
 public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;
+    private final String URL = "http://145.93.96.177:8080/";
+    RestTemplate client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +34,10 @@ public class TeacherDexActivity extends AppCompatActivity {
         System.out.println("set the dex name");
         //#ToDo load the TearcherDex content(for this user)
 
-
+        this.client = new RestTemplate();
+        client.getMessageConverters().add(new StringHttpMessageConverter());
+        TeacherDexActivity.Async async = new TeacherDexActivity.Async();
+        async.execute();
 
         createEnterCodeButtonEvent();
         createRankingsButtonEvent();
@@ -90,5 +102,15 @@ public class TeacherDexActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+    private class Async extends AsyncTask<Void, Void, List<Person>> {
+        @Override
+        protected List<Person> doInBackground(Void... params) {
+            //TODO put to textboxes (Future)
+            System.out.println("wat.");
+            List<Person> temp = Arrays.asList(client.getForObject(URL + "Person", Person[].class));
+            //TODO Select correct question
+            return temp;
+        }
     }
 }
