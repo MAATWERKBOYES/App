@@ -7,12 +7,15 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,12 +25,16 @@ import Business.User;
 
 public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;
-    RestTemplate client;
+    private RestTemplate client;
+    private ListView lvTeacherDex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_dex);
+
+        lvTeacherDex = (ListView)findViewById(R.id.lvTeacherDex);
+
         System.out.println("Loaded page");
         retrieveUser();
         System.out.println("got the user");
@@ -37,11 +44,20 @@ public class TeacherDexActivity extends AppCompatActivity {
 
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
-        TeacherDexActivity.Async async = new TeacherDexActivity.Async();
+        TeacherDexActivity.Async async = new TeacherDexActivity.Async(this);
         async.execute();
 
         createEnterCodeButtonEvent();
         createRankingsButtonEvent();
+    }
+
+    public void setAdapter(List<Person> teacherList)
+    {
+        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this
+                ,android.R.layout.simple_list_item_1
+                ,android.R.id.text1
+                ,teacherList);
+        lvTeacherDex.setAdapter(adapter);
     }
 
     private void retrieveUser(){
@@ -105,9 +121,17 @@ public class TeacherDexActivity extends AppCompatActivity {
                 .show();
     }
     private class Async extends AsyncTask<Void, Void, List<Person>> {
+
+        private final TeacherDexActivity activity;
+
+        public Async(TeacherDexActivity activity)
+        {
+            this.activity = activity;
+        }
+
         @Override
         protected List<Person> doInBackground(Void... params) {
-            //TODO put to textboxes (Future)
+            //TODO put to textboxes
             System.out.println("wat.");
             List<Person> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people", Person[].class));
             //TODO Select correct question
@@ -115,8 +139,9 @@ public class TeacherDexActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List<Person> persons) {
-            super.onPostExecute(persons);
+        protected void onPostExecute(List<Person> people)
+        {
+            activity.setAdapter(people);
         }
     }
 }

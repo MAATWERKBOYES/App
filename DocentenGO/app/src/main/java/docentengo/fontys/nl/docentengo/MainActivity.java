@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
         Async async = new Async();
-        async.execute();
+     //   async.execute();
 
 
         Button submitButton = (Button)findViewById(R.id.btnSaveName);
@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
     private class Async extends AsyncTask<Void, Void, List<User>> {
         @Override
         protected List<User> doInBackground(Void... params) {
-            //TODO change this to user for login
             List<User> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL()+"user",User[].class));
             return temp;
         }

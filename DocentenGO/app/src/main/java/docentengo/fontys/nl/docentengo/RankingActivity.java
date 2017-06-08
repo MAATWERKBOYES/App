@@ -36,6 +36,7 @@ public class RankingActivity extends AppCompatActivity {
         //#ToDo fill list with rankings
         createReturnDexButtonEvent();
         lvRankings = (ListView) findViewById(R.id.lvRankings);
+
         userList = new ArrayList<>();
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());

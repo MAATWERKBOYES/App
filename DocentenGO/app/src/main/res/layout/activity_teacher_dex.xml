@@ -18,6 +18,7 @@
         />
 
     <ListView
+        android:id="@+id/lvTeacherDex"
         android:layout_width="match_parent"
         android:layout_height="401dp"
         android:layout_weight="1.27" />

@@ -228,4 +228,8 @@ public class Person {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return displayName;
+    }
 }
