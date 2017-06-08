@@ -12,16 +12,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ApiConnectionInformation {
     public String connectionHost;
     public int connectionPort;
+    public String pictureToken;
 
     public String getUrl()
     {
       return "http://"+connectionHost + ":"+connectionPort+"/";
     }
-
+//?access_token=
     @JsonCreator
-    public ApiConnectionInformation(@JsonProperty("connection_host") String connectionHost, @JsonProperty("connection_port") int connectionPort)
+    public ApiConnectionInformation(@JsonProperty("connection_host") String connectionHost, @JsonProperty("connection_port") int connectionPort,@JsonProperty("picture_token") String pictureToken)
     {
         this.connectionPort = connectionPort;
         this.connectionHost = connectionHost;
+        this.pictureToken = pictureToken;
     }
 }
