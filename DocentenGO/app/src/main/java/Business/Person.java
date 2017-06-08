@@ -7,6 +7,7 @@ package Business;
         import com.fasterxml.jackson.annotation.JsonProperty;
         import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+        import java.io.Serializable;
         import java.util.HashMap;
         import java.util.Map;
 
@@ -23,7 +24,7 @@ package Business;
         "photo",
         "present"
 })
-public class Person {
+public class Person implements Serializable{
 
     @JsonProperty("id")
     private String id;

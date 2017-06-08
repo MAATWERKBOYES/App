@@ -32,11 +32,6 @@ public class TeacherInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_teacher_info);
         createButtonReturnDexEvent();
         loadTeacherIntoGUI();
-
-        this.client = new RestTemplate();
-        client.getMessageConverters().add(new StringHttpMessageConverter());
-        TeacherInfoActivity.Async async = new TeacherInfoActivity.Async();
-        async.execute();
     }
 
     private void createButtonReturnDexEvent(){
@@ -98,19 +93,5 @@ public class TeacherInfoActivity extends AppCompatActivity {
                 .show();
     }
 
-    private class Async extends AsyncTask<Void, Void, List<Person>> {
-        @Override
-        protected List<Person> doInBackground(Void... params) {
-            //TODO put to textboxes (Future)
-            System.out.println("wat.");
-            List<Person> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "People", Person[].class));
-            //TODO Select correct question
-            return temp;
-        }
 
-        @Override
-        protected void onPostExecute(List<Person> persons) {
-            super.onPostExecute(persons);
-        }
-    }
 }
