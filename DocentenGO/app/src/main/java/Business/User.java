@@ -10,26 +10,25 @@ import java.io.Serializable;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
-    private String iD;
+    private String imei;
     private String userName;
 
-    public User(String iD, String userName) {
-        this.iD = iD;
-        this.userName = userName;
-    }
+
     //imei                <- fuck off
     //name
-    public User(@JsonProperty("name")String userName)
+    public User(@JsonProperty("name")String userName, @JsonProperty("imei")String id)
     {
         this.userName = userName;
-        iD = "";
+        this.imei = id;
     }
 
-    public String getiD() {
-        return iD;
+    public String getImei() {
+        return imei;
     }
 
     public String getUserName() {
         return userName;
     }
+
+    
 }

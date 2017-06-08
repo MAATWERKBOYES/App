@@ -17,12 +17,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import Business.APIConnection;
 import Business.User;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (testInput(inputField.getText().toString())) {
                     //#getMyAndroidID
-                    String myID = "0";
-                    User newUser = new User(myID, inputField.getText().toString());
+                    User newUser = new User(inputField.getText().toString(),Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                     //TODO create user in db
+                    AsyncSave save = new AsyncSave(newUser);
+                  //  save.execute();
                     OpenTeacherDex(newUser);
                 } else {
                     showAlertDialog("Missing input", "please enter a username");
@@ -141,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
+    }//user/save
 
 
     private class Async extends AsyncTask<Void, Void, User> {
@@ -151,13 +162,48 @@ public class MainActivity extends AppCompatActivity {
             User temp = client.getForObject(APIConnection.getAPIConnectionInformationURL() + "user/" + userID, User.class);
             return temp;
         }
-
         @Override
         protected void onPostExecute(User user) {
-            super.onPostExecute(user);
-            if (user == null) {
+
+            if (user != null) {
                 OpenTeacherDex(user);
             }
+        }
+    }
+
+    private class AsyncSave extends AsyncTask<Void, Void, Void> {
+
+        private User user;
+
+        public AsyncSave(User user)
+        {
+            this.user = user;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ObjectMapper mapper= new ObjectMapper();
+            String json="";
+            try {
+                json = mapper.writeValueAsString(user);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            client.setInterceptors(Arrays.asList((ClientHttpRequestInterceptor) new Fatoe()));
+           client.postForObject(APIConnection.getAPIConnectionInformationURL() + "user",json,User.class);
+
+            return null;
+        }
+    }
+
+    public class Fatoe implements ClientHttpRequestInterceptor {
+
+        @Override
+        public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+            request.getHeaders().add(HttpHeaders.ACCEPT, "application/json");
+            request.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+
+            return execution.execute(request, body);
         }
     }
 }
