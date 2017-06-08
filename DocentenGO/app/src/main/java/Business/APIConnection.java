@@ -27,4 +27,8 @@ public final class APIConnection {
         }
         return apiURL.getUrl();
     }
+
+    public static String getPictureToken(){
+        return apiURL.getPictureToken();
+    }
 }

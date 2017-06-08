@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Business.APIConnection;
+import Business.DownloadImageTask;
 import Business.Person;
 import Business.User;
 
@@ -49,14 +50,20 @@ public class TeacherInfoActivity extends AppCompatActivity {
     private void loadTeacherIntoGUI(){
         if(getIntent().hasExtra("selectedTeacher")){
             Person person = (Person)getIntent().getExtras().getSerializable("selectedTeacher");
-            ImageView teacherPicture = (ImageView)findViewById(R.id.imgTeacher);
             TextView name = (TextView)findViewById(R.id.txtTeacherName);
             TextView occupation = (TextView)findViewById(R.id.txtTeacherOccupation);
             TextView title = (TextView)findViewById(R.id.txtTeacherTitle);
             TextView present = (TextView)findViewById(R.id.txtTeacherPresent);
+            ImageView picture = (ImageView) findViewById(R.id.imgTeacher);
 
-            //#ToDo variable image not hardcoded
-            teacherPicture.setBackgroundResource(R.drawable.luuk);
+            if(person.getPhoto() != null){
+                System.out.println(person.getPhoto());
+                new DownloadImageTask((ImageView) findViewById(R.id.imgTeacher))
+                        .execute(person.getPhoto()+"?access_token="+APIConnection.getPictureToken());
+            }else{
+                new DownloadImageTask(picture)
+                        .execute("https://api.fhict.nl/pictures/i870092.jpg?access_token="+APIConnection.getPictureToken());
+            }
             name.setText(person.getDisplayName());
             occupation.setText(person.getDepartment());
             if(person.getPersonalTitle() != null){

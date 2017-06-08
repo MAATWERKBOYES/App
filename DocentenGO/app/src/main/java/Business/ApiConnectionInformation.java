@@ -26,4 +26,8 @@ public class ApiConnectionInformation {
         this.connectionHost = connectionHost;
         this.pictureToken = pictureToken;
     }
+
+    public String getPictureToken() {
+        return pictureToken;
+    }
 }
