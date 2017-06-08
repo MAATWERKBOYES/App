@@ -1,6 +1,8 @@
-package docentengo.fontys.nl.docentengo;
+package Business;
 
 import java.util.List;
+
+import Business.Answer;
 
 public class Question {
 

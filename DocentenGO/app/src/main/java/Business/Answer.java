@@ -1,4 +1,4 @@
-package docentengo.fontys.nl.docentengo;
+package Business;
 
 /**
  * Created by Jeroe on 2-6-2017.
