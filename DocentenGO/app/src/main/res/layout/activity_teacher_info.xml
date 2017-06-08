@@ -12,9 +12,9 @@
         android:id="@+id/imgTeacher"
         android:layout_width="match_parent"
         android:layout_height="175dp"
-        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_gravity="center"
         android:layout_weight="0.37"
-        android:layout_gravity="center"/>
+        app:srcCompat="@android:drawable/stat_notify_error" />
 
     <TableLayout
         android:layout_width="match_parent"

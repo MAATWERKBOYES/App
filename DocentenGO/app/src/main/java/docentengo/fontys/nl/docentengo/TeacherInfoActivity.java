@@ -54,11 +54,15 @@ public class TeacherInfoActivity extends AppCompatActivity {
             TextView occupation = (TextView)findViewById(R.id.txtTeacherOccupation);
             TextView title = (TextView)findViewById(R.id.txtTeacherTitle);
             TextView present = (TextView)findViewById(R.id.txtTeacherPresent);
+            ImageView picture = (ImageView) findViewById(R.id.imgTeacher);
 
-            //#ToDo variable image not hardcoded
             if(person.getPhoto() != null){
+                System.out.println(person.getPhoto());
                 new DownloadImageTask((ImageView) findViewById(R.id.imgTeacher))
-                        .execute(person.getPhoto());
+                        .execute(person.getPhoto()+"?access_token="+APIConnection.getPictureToken());
+            }else{
+                new DownloadImageTask(picture)
+                        .execute("https://api.fhict.nl/pictures/i870092.jpg?access_token="+APIConnection.getPictureToken());
             }
             name.setText(person.getDisplayName());
             occupation.setText(person.getDepartment());

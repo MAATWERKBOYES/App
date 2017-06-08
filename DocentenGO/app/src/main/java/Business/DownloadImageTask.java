@@ -14,6 +14,7 @@ import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
+    int trycount = 5;
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
@@ -25,11 +26,17 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         try {
             InputStream in = new java.net.URL(urldisplay).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
+            return mIcon11;
         } catch (Exception e) {
+            trycount--;
             Log.e("Error", e.getMessage());
             e.printStackTrace();
+            if(trycount > 0){
+                return doInBackground(urls);
+            }else{
+                return null;
+            }
         }
-        return mIcon11;
     }
 
     protected void onPostExecute(Bitmap result) {

@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            if (user == null) {
+            if (user != null) {
                 OpenTeacherDex(user);
             }
         }
