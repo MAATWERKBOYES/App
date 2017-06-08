@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import Business.APIConnection;
 import Business.User;
 
 import java.util.Arrays;
@@ -27,19 +29,21 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private String secureID;
-    private final String URL = "http://145.93.96.177:8080/";
     RestTemplate client;
-    private List<Person> people;
+    private List<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
         Async async = new Async();
         async.execute();
+
 
         Button submitButton = (Button)findViewById(R.id.btnSaveName);
         EditText inputField = (EditText)findViewById(R.id.txtInput);
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     //#getMyAndroidID
                     String myID = "0";
                     User newUser = new User(myID, inputField.getText().toString());
+                    //TODO create user in db
                     OpenTeacherDex(newUser);
                 }else{
                     showAlertDialog("Missing input", "please enter a username");
@@ -140,14 +145,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private class Async extends AsyncTask<Void, Void, List<Question>> {
+    private class Async extends AsyncTask<Void, Void, List<User>> {
         @Override
-        protected List<Question> doInBackground(Void... params) {
+        protected List<User> doInBackground(Void... params) {
             //TODO change this to user for login
-            System.out.println("wat.");
-            List<Question> temp = Arrays.asList(client.getForObject(URL+"question",Question[].class));
+            List<User> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL()+"user",User[].class));
             return temp;
         }
 
+        @Override
+        protected void onPostExecute(List<User> users) {
+            super.onPostExecute(users);
+          String userID =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            for(User user : users)
+            {
+                if(userID.equals(user.getiD()))
+                {
+                    OpenTeacherDex(user);
+                }
+            }
+        }
     }
 }

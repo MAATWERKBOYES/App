@@ -18,11 +18,12 @@ import org.w3c.dom.Text;
 import java.util.Arrays;
 import java.util.List;
 
+import Business.APIConnection;
+import Business.Person;
 import Business.User;
 
 public class TeacherInfoActivity extends AppCompatActivity {
 
-    private final String URL = "http://145.93.96.177:8080/";
     RestTemplate client;
 
     @Override
@@ -98,9 +99,14 @@ public class TeacherInfoActivity extends AppCompatActivity {
         protected List<Person> doInBackground(Void... params) {
             //TODO put to textboxes (Future)
             System.out.println("wat.");
-            List<Person> temp = Arrays.asList(client.getForObject(URL + "People", Person[].class));
+            List<Person> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "People", Person[].class));
             //TODO Select correct question
             return temp;
+        }
+
+        @Override
+        protected void onPostExecute(List<Person> persons) {
+            super.onPostExecute(persons);
         }
     }
 }

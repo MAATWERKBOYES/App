@@ -10,10 +10,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-import Business.User;
+import Business.APIConnection;
+import Business.Question;
 
 public class BattleActivity extends AppCompatActivity {
-    private final String URL = "http://145.93.96.177:8080/";
     RestTemplate client;
 
     @Override
@@ -34,9 +34,14 @@ public class BattleActivity extends AppCompatActivity {
         protected List<Question> doInBackground(Void... params) {
             //TODO put to textboxes (Future)
             System.out.println("wat.");
-            List<Question> temp = Arrays.asList(client.getForObject(URL + "user", Question[].class));
+            List<Question> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "user", Question[].class));
             //TODO Select correct question
             return temp;
+        }
+
+        @Override
+        protected void onPostExecute(List<Question> questions) {
+            super.onPostExecute(questions);
         }
     }
 }
