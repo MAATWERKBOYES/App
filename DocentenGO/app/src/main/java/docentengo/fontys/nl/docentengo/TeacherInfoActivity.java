@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +61,7 @@ public class TeacherInfoActivity extends AppCompatActivity {
             TextView present = (TextView)findViewById(R.id.txtTeacherPresent);
 
             //#ToDo variable image not hardcoded
-            teacherPicture.setBackgroundResource(R.drawable.Luuk);
+            teacherPicture.setBackgroundResource(R.drawable.luuk);
             name.setText(person.getDisplayName());
             occupation.setText(person.getDepartment());
             title.setText(person.getPersonalTitle().toString());
