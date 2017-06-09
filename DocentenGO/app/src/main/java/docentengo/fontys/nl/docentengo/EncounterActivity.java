@@ -3,6 +3,7 @@ package docentengo.fontys.nl.docentengo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
+import Business.APIConnection;
+import Business.Person;
+import Business.Question;
 import Business.User;
 
 public class EncounterActivity extends AppCompatActivity {
+    RestTemplate client;
+    private Person foundTeacher;
+    String input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,20 +36,17 @@ public class EncounterActivity extends AppCompatActivity {
     }
 
     private void initiateBattleScreen(Button submitButton, final EditText inputField) {
-        submitButton.setText("Battle");
-        TextView message = (TextView) findViewById(R.id.tvEnterView);
-        message.setText("Enter the code of the teacher you found:");
-
         submitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!testInput(inputField.getText().toString())) {
                     showAlertDialog("Missing input", "please enter the Teacher code.");
-                } else if (1 == 2) {
-                    //#ToDo contact server and check if the teacher code exists
-                    showAlertDialog("Invallid input", "The entered teacher code was not vallid.");
-                } else {
-                    OpenBattleScreen(inputField.getText().toString());
+                }else{
+                    input = inputField.getText().toString();
+                    client = new RestTemplate();
+                    client.getMessageConverters().add(new StringHttpMessageConverter());
+                    EncounterActivity.Async async = new EncounterActivity.Async(EncounterActivity.this);
+                    async.execute();
                 }
             }
         });
@@ -56,10 +65,9 @@ public class EncounterActivity extends AppCompatActivity {
         finish();
     }
 
-
     private void OpenBattleScreen(String teacherCode) {
         Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
-        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("BattleMode"));
+        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
         intent.putExtra("TeacherCode", teacherCode);
         startActivity(intent);
         finish();
@@ -70,6 +78,18 @@ public class EncounterActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public void loadBattle(Person teacher){
+        if(teacher != null){
+            Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
+            intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
+            intent.putExtra("SelectedTeacher", teacher);
+            startActivity(intent);
+            finish();
+        }else{
+            showAlertDialog("no Teacher", "Tried opening battle activity without a teacher");
+        }
     }
 
     /**
@@ -90,4 +110,26 @@ public class EncounterActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }//user/save
+    //people/"abvr"
+    private class Async extends AsyncTask<Void, Void, Person> {
+        private final EncounterActivity activity;
+
+        public Async(EncounterActivity activity)
+        {
+            this.activity = activity;
+        }
+
+        @Override
+        protected Person doInBackground(Void... params) {
+            System.out.println("Tried getting a question for: " );
+            Person temp = client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people/" + input, Person.class);
+            return temp;
+        }
+
+        @Override
+        protected void onPostExecute(Person foundTeacher) {
+            System.out.println("in onPostExecute");
+            activity.loadBattle(foundTeacher);
+        }
+    }
 }
