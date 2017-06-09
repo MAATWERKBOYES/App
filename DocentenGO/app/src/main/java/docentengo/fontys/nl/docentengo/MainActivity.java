@@ -15,44 +15,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.support.HttpRequestWrapper;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import Business.APIConnection;
+import Business.ApiController;
+import Business.PersonEntry;
 import Business.User;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String secureID;
-    RestTemplate client;
-    private List<User> users;
+
+  private ApiController apiController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        apiController = new ApiController();
 
-        this.client = new RestTemplate();
-        client.getMessageConverters().add(new StringHttpMessageConverter());
-        Async async = new Async();
-        async.execute();
-
+        Login Login = new Login();
+        Login.execute();
 
         Button submitButton = (Button) findViewById(R.id.btnSaveName);
         EditText inputField = (EditText) findViewById(R.id.txtInput);
@@ -67,9 +50,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (testInput(inputField.getText().toString())) {
                     //#getMyAndroidID
-                    User newUser = new User(inputField.getText().toString(),Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-                    //TODO create user in db
-                    AsyncSave save = new AsyncSave(newUser);
+                    User newUser = new User(inputField.getText().toString(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), new ArrayList<PersonEntry>());
+                    registerUser save = new registerUser(newUser);
                     save.execute();
                     OpenTeacherDex(newUser);
                 } else {
@@ -87,10 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean testInput(String stringToTest) {
-        if (stringToTest.equals(null) || "".equals(stringToTest)) {
-            return false;
-        }
-        return true;
+        return !(stringToTest == null || stringToTest.trim().isEmpty());
     }
 
     /**
@@ -110,60 +89,33 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }//user/save
+    }
 
 
-    private class Async extends AsyncTask<Void, Void, User> {
+    private class Login extends AsyncTask<Void, Void, User> {
         @Override
         protected User doInBackground(Void... params) {
-            String userID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            User temp = client.getForObject(APIConnection.getAPIConnectionInformationURL() + "user/" + userID, User.class);
-            return temp;
+            String secureID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            return apiController.loginUser(secureID);
         }
         @Override
         protected void onPostExecute(User user) {
-
             if (user != null) {
                 OpenTeacherDex(user);
             }
         }
     }
 
-    private class AsyncSave extends AsyncTask<Void, Void, Void> {
-
+    private class registerUser extends AsyncTask<Void, Void, Void> {
         private User user;
-
-        public AsyncSave(User user)
+        public registerUser(User user)
         {
             this.user = user;
         }
-
         @Override
         protected Void doInBackground(Void... params) {
-            ObjectMapper mapper= new ObjectMapper();
-            String json="";
-            try {
-                json = mapper.writeValueAsString(user);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            client.setInterceptors(Arrays.asList((ClientHttpRequestInterceptor) new Fatoe()));
-           client.postForObject(APIConnection.getAPIConnectionInformationURL() + "user",json,User.class);
-
+            apiController.registerUser(user);
             return null;
-        }
-    }
-
-    public class Fatoe implements ClientHttpRequestInterceptor {
-
-        @Override
-        public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-            request.getHeaders().add(HttpHeaders.ACCEPT, "application/json");
-            request.getHeaders().remove(HttpHeaders.CONTENT_TYPE);
-            request.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
-
-
-            return execution.execute(request, body);
         }
     }
 }

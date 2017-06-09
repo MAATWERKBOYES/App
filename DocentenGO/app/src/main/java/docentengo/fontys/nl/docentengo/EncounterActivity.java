@@ -3,6 +3,7 @@ package docentengo.fontys.nl.docentengo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import Business.ApiController;
+import Business.Person;
 import Business.User;
 
 public class EncounterActivity extends AppCompatActivity {
+
+    private ApiController apiController;
+    private Person selectedTeacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +27,8 @@ public class EncounterActivity extends AppCompatActivity {
         Button submitButton = (Button) findViewById(R.id.btnEngage);
         EditText inputField = (EditText) findViewById(R.id.txtInput);
         initiateBattleScreen(submitButton, inputField);
+
+        apiController = new ApiController();
     }
 
     private void initiateBattleScreen(Button submitButton, final EditText inputField) {
@@ -29,18 +37,23 @@ public class EncounterActivity extends AppCompatActivity {
         message.setText("Enter the code of the teacher you found:");
 
         submitButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!testInput(inputField.getText().toString())) {
-                    showAlertDialog("Missing input", "please enter the Teacher code.");
-                } else if (1 == 2) {
-                    //#ToDo contact server and check if the teacher code exists
-                    showAlertDialog("Invallid input", "The entered teacher code was not vallid.");
-                } else {
-                    OpenBattleScreen(inputField.getText().toString());
-                }
-            }
-        });
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                if (!testInput(inputField.getText().toString())) {
+                                                    showAlertDialog("Missing input", "please enter the Teacher code.");
+                                                } else {
+                                                    GetTeacher getTeacher = new GetTeacher(inputField.getText().toString());
+
+                                                    if (getTeacher.execute()==null) {
+                                                        showAlertDialog("Invallid input", "The entered teacher code was not vallid.");
+                                                    } else {
+                                                        OpenBattleScreen(inputField.getText().toString());
+                                                    }
+                                                }
+                                            }
+                                        }
+        );
         Button returnButton = (Button) findViewById(R.id.btnReturnDex);
         returnButton.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -49,6 +62,7 @@ public class EncounterActivity extends AppCompatActivity {
             }
         });
     }
+
     private void OpenTeacherDex(User currentUser) {
         Intent intent = new Intent(getApplicationContext(), TeacherDexActivity.class);
         intent.putExtra("CurrentUser", currentUser);
@@ -66,10 +80,7 @@ public class EncounterActivity extends AppCompatActivity {
     }
 
     private boolean testInput(String stringToTest) {
-        if (stringToTest.equals(null) || "".equals(stringToTest)) {
-            return false;
-        }
-        return true;
+        return !(stringToTest == null || stringToTest.trim().isEmpty());
     }
 
     /**
@@ -90,4 +101,23 @@ public class EncounterActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }//user/save
+
+
+    private class GetTeacher extends AsyncTask<Void, Void, Person> {
+        private String abbreviation;
+        public GetTeacher(String abbreviation)
+        {
+            this.abbreviation = abbreviation;
+        }
+        @Override
+        protected Person doInBackground(Void... params) {
+
+            return apiController.getTeacher(abbreviation);
+        }
+
+        @Override
+        protected void onPostExecute(Person person) {
+            selectedTeacher = person;
+        }
+    }
 }

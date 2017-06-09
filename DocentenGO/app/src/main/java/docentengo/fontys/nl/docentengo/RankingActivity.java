@@ -11,37 +11,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import Business.APIConnection;
+import Business.ApiController;
 import Business.User;
 
 public class RankingActivity extends AppCompatActivity {
     private User signedUser;
     private ListView lvRankings;
-    RestTemplate client;
-    ArrayList<User> userList;
-
+    private ApiController apiController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
         retrieveUser();
-        //#ToDo fill list with rankings
         createReturnDexButtonEvent();
+        this.apiController = new ApiController();
         lvRankings = (ListView) findViewById(R.id.lvRankings);
 
-        userList = new ArrayList<>();
-        this.client = new RestTemplate();
-        client.getMessageConverters().add(new StringHttpMessageConverter());
-        RankingActivity.Async async = new RankingActivity.Async();
-        async.execute();
+        FillRankingList FillRankingList = new FillRankingList();
+        FillRankingList.execute();
     }
 
     private void retrieveUser(){
@@ -83,22 +73,20 @@ public class RankingActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void setAdapter(List<User> teacherList) {
+    public void setAdapter(List<User> users) {
         ArrayAdapter<User> adapter = new ArrayAdapter<>(this
                 , android.R.layout.simple_list_item_1
                 , android.R.id.text1
-                , teacherList);
+                , users);
         lvRankings.setAdapter(adapter);
     }
 
-    private class Async extends AsyncTask<Void, Void, List<User>> {
+    private class FillRankingList extends AsyncTask<Void, Void, List<User>> {
         @Override
         protected List<User> doInBackground(Void... params) {
-            //TODO change this to rankings
-            System.out.println("wat.");
-            List<User> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "user", User[].class));
-            //TODO sort by score
-            return temp;
+            //TODO put to textboxes (Future)
+            //TODO Select correct question
+            return apiController.getAllUser();
         }
 
         @Override
