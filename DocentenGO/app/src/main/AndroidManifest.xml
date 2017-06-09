@@ -21,7 +21,8 @@
         <activity android:name=".TeacherDexActivity" />
         <activity android:name=".BattleActivity" />
         <activity android:name=".TeacherInfoActivity" />
-        <activity android:name=".RankingActivity"></activity>
+        <activity android:name=".RankingActivity" />
+        <activity android:name=".EncounterActivity"></activity>
     </application>
 
 </manifest>

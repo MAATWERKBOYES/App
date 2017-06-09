@@ -94,8 +94,8 @@ public class TeacherDexActivity extends AppCompatActivity {
         navigateBattleCodeScreen.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                intent.putExtra("BattleMode", signedUser);
+                Intent intent = new Intent(getApplicationContext(),EncounterActivity.class);
+                intent.putExtra("CurrentUser", signedUser);
                 startActivity(intent);
                 finish();
             }
@@ -131,6 +131,7 @@ public class TeacherDexActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
     private class Async extends AsyncTask<Void, Void, List<Person>> {
 
         private final TeacherDexActivity activity;
@@ -138,6 +139,7 @@ public class TeacherDexActivity extends AppCompatActivity {
         public Async(TeacherDexActivity activity)
         {
             this.activity = activity;
+            System.out.println("created Async");
         }
 
         @Override
@@ -150,6 +152,7 @@ public class TeacherDexActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Person> people)
         {
+            System.out.println("in onPostExecute");
             activity.setAdapter(people);
         }
     }

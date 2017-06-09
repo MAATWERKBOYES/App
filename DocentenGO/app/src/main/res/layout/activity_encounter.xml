@@ -29,7 +29,7 @@
                 android:layout_width="227dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Enter your username:"
+                android:text="Enter the code of the teacher you found:"
                 android:gravity="center"
                 android:layout_alignParentTop="true"
                 android:layout_alignLeft="@+id/txtInput"
@@ -39,26 +39,41 @@
                 android:id="@+id/txtInput"
                 android:layout_width="227dp"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/btnSaveName"
-                android:layout_alignEnd="@+id/btnSaveName"
-                android:layout_alignLeft="@+id/btnSaveName"
-                android:layout_alignRight="@+id/btnSaveName"
-                android:layout_alignStart="@+id/btnSaveName"
+                android:layout_above="@+id/btnEngage"
+                android:layout_alignEnd="@+id/btnEngage"
+                android:layout_alignLeft="@+id/btnEngage"
+                android:layout_alignRight="@+id/btnEngage"
+                android:layout_alignStart="@+id/btnEngage"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
             <Button
-                android:id="@+id/btnSaveName"
+                android:id="@+id/btnEngage"
                 android:layout_width="227dp"
                 android:layout_height="wrap_content"
                 android:background="@color/FontysPurple"
-                android:text="Save"
+                android:text="Battle"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="90dp"
                 android:layout_marginTop="30dp"
                 android:textColor="@color/FontysWhite"/>
+
+            <Button
+                android:id="@+id/btnReturnDex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/btnEngage"
+                android:layout_alignLeft="@+id/btnEngage"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/btnEngage"
+                android:layout_alignStart="@+id/btnEngage"
+                android:layout_marginBottom="29dp"
+                android:background="@color/FontysPurple"
+                android:textColor="@color/FontysWhite"
+                android:text="Return to TeacherDex"/>
+
         </RelativeLayout>
 
     </LinearLayout>

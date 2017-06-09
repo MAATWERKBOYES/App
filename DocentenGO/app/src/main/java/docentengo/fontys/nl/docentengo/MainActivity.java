@@ -56,12 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button submitButton = (Button) findViewById(R.id.btnSaveName);
         EditText inputField = (EditText) findViewById(R.id.txtInput);
-        //determine whether or not it's the app booting up, it can also be redirecting to the enter teacher code screen
-        if (!getIntent().hasExtra("BattleMode")) {
-            initiateHomeScreen(submitButton, inputField);
-        } else if (getIntent().hasExtra("BattleMode")) {
-            initiateBattleScreen(submitButton, inputField);
-        }
+        initiateHomeScreen(submitButton, inputField);
     }
 
     //#ToDo Jeroen hier zorgen dat je als je al eens bent ingelogt gelijk doorgaat, in this case no input required
@@ -87,43 +82,6 @@ public class MainActivity extends AppCompatActivity {
     private void OpenTeacherDex(User currentUser) {
         Intent intent = new Intent(getApplicationContext(), TeacherDexActivity.class);
         intent.putExtra("CurrentUser", currentUser);
-        startActivity(intent);
-        finish();
-    }
-
-    private void initiateBattleScreen(Button submitButton, final EditText inputField) {
-        submitButton.setText("Battle");
-        TextView message = (TextView) findViewById(R.id.tvEnterView);
-        message.setText("Enter the code of the teacher you found:");
-
-        submitButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!testInput(inputField.getText().toString())) {
-                    showAlertDialog("Missing input", "please enter the Teacher code.");
-                } else if (1 == 2) {
-                    //#ToDo contact server and check if the teacher code exists
-                    showAlertDialog("Invallid input", "The entered teacher code was not vallid.");
-                } else {
-                    OpenBattleScreen(inputField.getText().toString());
-                }
-            }
-        });
-
-        Button returnButton = (Button) findViewById(R.id.btnReturnDex);
-        returnButton.setVisibility(View.VISIBLE);
-        returnButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenTeacherDex((User) getIntent().getExtras().getSerializable("BattleMode"));
-            }
-        });
-    }
-
-    private void OpenBattleScreen(String teacherCode) {
-        Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
-        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("BattleMode"));
-        intent.putExtra("TeacherCode", teacherCode);
         startActivity(intent);
         finish();
     }
