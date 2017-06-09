@@ -11,14 +11,14 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
     private String imei;
-    private String userName;
+    private String name;
 
 
     //imei                <- fuck off
     //name
     public User(@JsonProperty("name")String userName, @JsonProperty("imei")String id)
     {
-        this.userName = userName;
+        this.name = userName;
         this.imei = id;
     }
 
@@ -26,8 +26,8 @@ public class User implements Serializable {
         return imei;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
     

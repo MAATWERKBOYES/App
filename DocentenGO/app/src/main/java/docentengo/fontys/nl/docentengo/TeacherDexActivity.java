@@ -16,7 +16,6 @@ import android.widget.TextView;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -82,11 +81,11 @@ public class TeacherDexActivity extends AppCompatActivity {
 
     private void setPersonalDexName(){
         TextView devName = (TextView)findViewById(R.id.tvDexName);
-        String username = signedUser.getUserName();
+        String username = signedUser.getName();
         if("sS".indexOf(username.substring(username.length() - 1)) > -1 ){
-            devName.setText(signedUser.getUserName() + "' Dex");
+            devName.setText(signedUser.getName() + "' Dex");
         }else{
-            devName.setText(signedUser.getUserName() + "'s Dex");
+            devName.setText(signedUser.getName() + "'s Dex");
         }
     }
 

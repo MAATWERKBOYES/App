@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     User newUser = new User(inputField.getText().toString(),Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                     //TODO create user in db
                     AsyncSave save = new AsyncSave(newUser);
-                  //  save.execute();
+                    save.execute();
                     OpenTeacherDex(newUser);
                 } else {
                     showAlertDialog("Missing input", "please enter a username");
@@ -201,7 +201,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
             request.getHeaders().add(HttpHeaders.ACCEPT, "application/json");
+            request.getHeaders().remove(HttpHeaders.CONTENT_TYPE);
             request.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+
 
             return execution.execute(request, body);
         }
