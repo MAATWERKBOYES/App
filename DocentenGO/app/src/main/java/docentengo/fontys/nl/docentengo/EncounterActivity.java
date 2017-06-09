@@ -15,6 +15,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import Business.APIConnection;
 import Business.Person;
@@ -122,14 +123,24 @@ public class EncounterActivity extends AppCompatActivity {
         @Override
         protected Person doInBackground(Void... params) {
             System.out.println("Tried getting a question for: " );
-            Person temp = client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people/" + input, Person.class);
-            return temp;
+            try{
+                Person temp = client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people/" + input.toLowerCase(), Person.class);
+                return temp;
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+            return null;
         }
 
         @Override
         protected void onPostExecute(Person foundTeacher) {
             System.out.println("in onPostExecute");
-            activity.loadBattle(foundTeacher);
+            if(foundTeacher == null){
+                activity.showAlertDialog("Teacher not found", "There was no teacher associated with the entered code.");
+            }else{
+                activity.loadBattle(foundTeacher);
+            }
+
         }
     }
 }
