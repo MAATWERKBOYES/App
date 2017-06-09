@@ -36,6 +36,7 @@ public class BattleActivity extends AppCompatActivity {//SelectedTeacher
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
         loadTeacher();
+        createRunButtonEvent();
         this.client = new RestTemplate();
         client.getMessageConverters().add(new StringHttpMessageConverter());
         BattleActivity.Async async = new BattleActivity.Async(this);
@@ -56,6 +57,19 @@ public class BattleActivity extends AppCompatActivity {//SelectedTeacher
         }else if(!getIntent().hasExtra("SelectedTeacher")){
             showAlertDialog("No teacher", "No selected teacher was found");
         }
+    }
+
+    private void createRunButtonEvent(){
+        Button returnDex = (Button)findViewById(R.id.btnReturn);
+        returnDex.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),EncounterActivity.class);
+                intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void loadQuestion(Question question){

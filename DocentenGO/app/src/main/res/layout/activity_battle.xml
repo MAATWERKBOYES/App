@@ -60,11 +60,11 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/btnCatch"
+        android:id="@+id/btnReturn"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:background="@color/FontysPurple"
         android:layout_gravity="center"
-        android:text="Catch"
+        android:text="Run"
         android:textColor="@color/FontysWhite"/>
 </LinearLayout>
