@@ -1,7 +1,5 @@
 package docentengo.fontys.nl.docentengo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +8,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -40,7 +36,9 @@ public class RankingActivity extends AppCompatActivity {
         if(getIntent().hasExtra("CurrentUser")){
             signedUser = (User)getIntent().getExtras().getSerializable("CurrentUser");
         }else if(!getIntent().hasExtra("CurrentUser")){
-            showAlertDialog("No user", "There was no logged in User found.");
+            AlertHandler.showAlertDialog(this,
+                    "No user",
+                    "There was no logged-in User found.");
         }
     }
 
@@ -55,24 +53,6 @@ public class RankingActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    /**
-     * Shows an alert dialog
-     * @param title of the dialog
-     * @param message of the dialog
-     */
-    private void showAlertDialog(String title, String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
 
     public void setAdapter(List<User> users) {
@@ -94,7 +74,10 @@ public class RankingActivity extends AppCompatActivity {
             }
             catch(Exception ex)
             {
-                showAlertDialog("Server connection problem","The application was unable to connect to the server");
+                AlertHandler.showErrorDialog(RankingActivity.this,
+                        ex,
+                        "Server connection error",
+                        "The application was unable to connect to the server");
                 return null;
             }
         }

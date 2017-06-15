@@ -1,7 +1,5 @@
 package docentengo.fontys.nl.docentengo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +49,7 @@ private ApiController apiController;
                         .execute("https://api.fhict.nl/pictures/i870092.jpg?access_token="+ APIConnection.getPictureToken());
             }
         }else if(!getIntent().hasExtra("SelectedTeacher")){
-            showAlertDialog("No teacher", "No selected teacher was found");
+            AlertHandler.showAlertDialog(this, "No teacher found", "No selected teacher was found");
         }
     }
 
@@ -83,7 +81,9 @@ private ApiController apiController;
                 selectButton.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showAlertDialog("clicked", a.getId() + ", " + a.getValue());
+                        AlertHandler.showAlertDialog(BattleActivity.this, "Clicked!",
+                                "Id: " + a.getId() + ";\n" +
+                                "Value: "+ a.getValue());
                     }
                 });
                 row.addView(selectButton);
@@ -93,26 +93,8 @@ private ApiController apiController;
                 answers.addView(row);
             }
         }catch(Exception ex){
-            showAlertDialog("exception loadQuestion", ex.getMessage());
+            AlertHandler.showErrorDialog(this, ex, "Failed to load question.");
         }
-    }
-
-    /**
-     * Shows an alert dialog
-     * @param title of the dialog
-     * @param message of the dialog
-     */
-    private void showAlertDialog(String title, String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
 
     private class GetQuestions extends AsyncTask<Void, Void, Question> {

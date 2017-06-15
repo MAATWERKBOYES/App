@@ -5,8 +5,6 @@ package docentengo.fontys.nl.docentengo;
 //http://145.93.96.177:8080/people
 //http://145.93.96.177:8080/question
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.provider.Settings;
@@ -23,7 +21,6 @@ import Business.PersonEntry;
 import Business.User;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
                     save.execute();
                     OpenTeacherDex(newUser);
                 } else {
-                    showAlertDialog("Missing input", "please enter a username");
+                    AlertHandler.showAlertDialog(MainActivity.this,
+                            "Missing input",
+                            "Please enter a valid username.");
                 }
             }
         });
@@ -74,26 +73,6 @@ public class MainActivity extends AppCompatActivity {
         return !(stringToTest == null || stringToTest.trim().isEmpty());
     }
 
-    /**
-     * Shows an alert dialog
-     *
-     * @param title   of the dialog
-     * @param message of the dialog
-     */
-    private void showAlertDialog(String title, String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
-
     private class Login extends AsyncTask<Void, Void, User> {
         @Override
         protected User doInBackground(Void... params) {
@@ -104,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
             }
             catch (HttpClientErrorException ex)
             {
-                showAlertDialog("Server connection problem","The application was unable to connect to the server");
+                AlertHandler.showErrorDialog(MainActivity.this,
+                        ex,
+                        "Server connection error",
+                        "The application was unable to connect to the server.");
                 return null;
             }
         }
@@ -132,7 +114,10 @@ public class MainActivity extends AppCompatActivity {
             }
             catch (Exception ex)
             {
-                showAlertDialog("Server connection problem","The application was unable to connect to the server");
+                AlertHandler.showErrorDialog(MainActivity.this,
+                        ex,
+                        "Server connection error",
+                        "The application was unable to connect to the server");
                 return null;
             }
 

@@ -1,7 +1,5 @@
 package docentengo.fontys.nl.docentengo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -70,27 +68,11 @@ public class TeacherInfoActivity extends AppCompatActivity {
                 present.setText(person.getSurName() + " got away safely");
             }
         }else if(!getIntent().hasExtra("CurrentUser")){
-            showAlertDialog("No teacher", "The screen was loaded without there being a selected teacher");
+            AlertHandler.showAlertDialog(
+                    this,
+                    "No teacher",
+                    "The screen was loaded without there being a selected teacher");
         }
     }
-
-    /**
-     * Shows an alert dialog
-     * @param title of the dialog
-     * @param message of the dialog
-     */
-    private void showAlertDialog(String title, String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
 
 }
