@@ -1,4 +1,4 @@
-package business;
+package Business;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,4 +50,6 @@ public class User implements Serializable {
     public void setTeachers(List<PersonEntry> teachers) {
         this.teachers = teachers;
     }
+
+    public void addTeacher(PersonEntry teacher){this.teachers.add(teacher);}
 }

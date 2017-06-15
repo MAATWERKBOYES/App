@@ -14,8 +14,8 @@ import org.springframework.web.client.RestTemplate;
 
 import api.APIConnection;
 import api.DownloadImageTask;
-import business.Person;
-import business.User;
+import Business.Person;
+import Business.User;
 
 public class TeacherInfoActivity extends AppCompatActivity {
 
