@@ -1,4 +1,4 @@
-package Business;
+package api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +14,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import api.APIConnection;
+import business.Person;
+import business.Question;
+import business.User;
+
 /**
  * Created by Jeroe on 9-6-2017.
  */
@@ -22,10 +27,13 @@ public class ApiController {
 
     private RestTemplate client = new RestTemplate();
 
-
+public Question getQuestionsFromTeacher(Person person)
+{
+    return client.getForObject(APIConnection.getAPIConnectionInformationURL() + "question/department/" + person.getDepartment(), Question.class);
+}
     public Person getTeacher(String abbreviation)
     {
-        return client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people/"+ abbreviation, Person.class);
+        return client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people/"+  abbreviation.toLowerCase(), Person.class);
     }
     public List<User> getAllUser()
     {

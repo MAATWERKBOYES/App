@@ -1,4 +1,4 @@
-package Business;
+package business;
 
         import com.fasterxml.jackson.annotation.JsonAnyGetter;
         import com.fasterxml.jackson.annotation.JsonAnySetter;

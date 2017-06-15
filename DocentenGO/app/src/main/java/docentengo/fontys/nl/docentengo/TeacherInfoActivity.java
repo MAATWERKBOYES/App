@@ -3,7 +3,6 @@ package docentengo.fontys.nl.docentengo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,16 +10,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.List;
-
-import Business.APIConnection;
-import Business.DownloadImageTask;
-import Business.Person;
-import Business.User;
+import api.APIConnection;
+import api.DownloadImageTask;
+import business.Person;
+import business.User;
 
 public class TeacherInfoActivity extends AppCompatActivity {
 

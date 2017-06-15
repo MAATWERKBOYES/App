@@ -1,8 +1,6 @@
-package Business;
+package business;
 
 import java.util.List;
-
-import Business.Answer;
 
 public class Question {
 

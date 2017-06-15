@@ -19,9 +19,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-import Business.APIConnection;
-import Business.Person;
-import Business.User;
+import api.APIConnection;
+import business.Person;
+import business.User;
 
 public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;

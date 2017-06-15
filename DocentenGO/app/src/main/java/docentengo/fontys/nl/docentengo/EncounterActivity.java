@@ -9,13 +9,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import Business.ApiController;
-import Business.Person;
-import Business.User;
+import api.ApiController;
+import business.Person;
+import org.springframework.web.client.RestTemplate;
+import business.User;
 
 public class EncounterActivity extends AppCompatActivity {
+    RestTemplate client;
+    private Person foundTeacher;
+    String input;
 
     private ApiController apiController;
     private Person selectedTeacher;
@@ -32,10 +34,6 @@ public class EncounterActivity extends AppCompatActivity {
     }
 
     private void initiateBattleScreen(Button submitButton, final EditText inputField) {
-        submitButton.setText("Battle");
-        TextView message = (TextView) findViewById(R.id.tvEnterView);
-        message.setText("Enter the code of the teacher you found:");
-
         submitButton.setOnClickListener(new Button.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -70,10 +68,9 @@ public class EncounterActivity extends AppCompatActivity {
         finish();
     }
 
-
     private void OpenBattleScreen(String teacherCode) {
         Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
-        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("BattleMode"));
+        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
         intent.putExtra("TeacherCode", teacherCode);
         startActivity(intent);
         finish();
@@ -100,9 +97,7 @@ public class EncounterActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }//user/save
-
-
+    }
     private class GetTeacher extends AsyncTask<Void, Void, Person> {
         private String abbreviation;
         public GetTeacher(String abbreviation)
@@ -114,10 +109,11 @@ public class EncounterActivity extends AppCompatActivity {
 
             return apiController.getTeacher(abbreviation);
         }
-
         @Override
         protected void onPostExecute(Person person) {
             selectedTeacher = person;
         }
     }
+
 }
+

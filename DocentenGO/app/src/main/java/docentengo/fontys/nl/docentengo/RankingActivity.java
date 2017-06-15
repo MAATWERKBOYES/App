@@ -13,8 +13,8 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import Business.ApiController;
-import Business.User;
+import api.ApiController;
+import business.User;
 
 public class RankingActivity extends AppCompatActivity {
     private User signedUser;
