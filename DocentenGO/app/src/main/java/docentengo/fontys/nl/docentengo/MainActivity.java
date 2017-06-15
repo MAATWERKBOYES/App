@@ -16,11 +16,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.springframework.web.client.HttpClientErrorException;
+
 import api.ApiController;
-import business.PersonEntry;
-import business.User;
+import Business.PersonEntry;
+import Business.User;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         initiateHomeScreen(submitButton, inputField);
     }
 
-    //#ToDo Jeroen hier zorgen dat je als je al eens bent ingelogt gelijk doorgaat, in this case no input required
     private void initiateHomeScreen(Button submitButton, final EditText inputField) {
         //ifSignedIn call OpenTeacherDex with my ID/Username
         submitButton.setOnClickListener(new Button.OnClickListener() {
@@ -95,8 +97,16 @@ public class MainActivity extends AppCompatActivity {
     private class Login extends AsyncTask<Void, Void, User> {
         @Override
         protected User doInBackground(Void... params) {
-            String secureID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            return apiController.loginUser(secureID);
+            try
+            {
+                String secureID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                return apiController.loginUser(secureID);
+            }
+            catch (HttpClientErrorException ex)
+            {
+                showAlertDialog("Server connection problem","The application was unable to connect to the server");
+                return null;
+            }
         }
         @Override
         protected void onPostExecute(User user) {
@@ -115,8 +125,17 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected Void doInBackground(Void... params) {
-            apiController.registerUser(user);
-            return null;
+            try
+            {
+                apiController.registerUser(user);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                showAlertDialog("Server connection problem","The application was unable to connect to the server");
+                return null;
+            }
+
         }
     }
 }

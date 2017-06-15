@@ -10,17 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import api.ApiController;
-import business.Person;
+import Business.Person;
 import org.springframework.web.client.RestTemplate;
-import business.User;
+import Business.User;
 
 public class EncounterActivity extends AppCompatActivity {
-    RestTemplate client;
-    private Person foundTeacher;
-    String input;
-
     private ApiController apiController;
-    private Person selectedTeacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +37,7 @@ public class EncounterActivity extends AppCompatActivity {
                                                     showAlertDialog("Missing input", "please enter the Teacher code.");
                                                 } else {
                                                     GetTeacher getTeacher = new GetTeacher(inputField.getText().toString());
-
-                                                    if (getTeacher.execute()==null) {
-                                                        showAlertDialog("Invallid input", "The entered teacher code was not vallid.");
-                                                    } else {
-                                                        OpenBattleScreen(inputField.getText().toString());
-                                                    }
+                                                    getTeacher.execute();
                                                 }
                                             }
                                         }
@@ -106,12 +96,22 @@ public class EncounterActivity extends AppCompatActivity {
         }
         @Override
         protected Person doInBackground(Void... params) {
+            try
+            {
+                return apiController.getTeacher(abbreviation);
+            }
+            catch (Exception ex)
+            {
+                showAlertDialog("Invalid input", "The entered teacher code was not valid.");
+                return null;
+            }
 
-            return apiController.getTeacher(abbreviation);
         }
         @Override
         protected void onPostExecute(Person person) {
-            selectedTeacher = person;
+            if (person!=null) {
+                OpenBattleScreen(person.getId());
+            }
         }
     }
 

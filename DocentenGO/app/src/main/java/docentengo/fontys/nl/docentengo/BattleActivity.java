@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 
 import api.APIConnection;
-import business.Answer;
+import Business.Answer;
 import api.ApiController;
 import api.DownloadImageTask;
-import business.Person;
-import business.Question;
+import Business.Person;
+import Business.Question;
 
 public class BattleActivity extends AppCompatActivity {
 

@@ -11,10 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.List;
 
 import api.ApiController;
-import business.User;
+import Business.User;
 
 public class RankingActivity extends AppCompatActivity {
     private User signedUser;
@@ -74,21 +76,28 @@ public class RankingActivity extends AppCompatActivity {
     }
 
     public void setAdapter(List<User> users) {
-        ArrayAdapter<User> adapter = new ArrayAdapter<>(this
-                , android.R.layout.simple_list_item_1
-                , android.R.id.text1
-                , users);
-        lvRankings.setAdapter(adapter);
+        if(users !=null) {
+            ArrayAdapter<User> adapter = new ArrayAdapter<>(this
+                    , android.R.layout.simple_list_item_1
+                    , android.R.id.text1
+                    , users);
+            lvRankings.setAdapter(adapter);
+        }
     }
 
     private class FillRankingList extends AsyncTask<Void, Void, List<User>> {
         @Override
         protected List<User> doInBackground(Void... params) {
-            //TODO put to textboxes (Future)
-            //TODO Select correct question
-            return apiController.getAllUser();
+            try
+            {
+                return apiController.getAllUser();
+            }
+            catch(Exception ex)
+            {
+                showAlertDialog("Server connection problem","The application was unable to connect to the server");
+                return null;
+            }
         }
-
         @Override
         protected void onPostExecute(List<User> users) {
             setAdapter(users);

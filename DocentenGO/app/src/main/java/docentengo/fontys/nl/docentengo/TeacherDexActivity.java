@@ -19,13 +19,15 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+import Business.PersonEntry;
 import api.APIConnection;
-import business.Person;
-import business.User;
+import Business.Person;
+import Business.User;
+import api.ApiController;
 
 public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;
-    private RestTemplate client;
+    private ApiController apiController;
     private ListView lvTeacherDex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +41,16 @@ public class TeacherDexActivity extends AppCompatActivity {
         System.out.println("got the user");
         setPersonalDexName();
         System.out.println("set the dex name");
-        //#ToDo load the TearcherDex content(for this user)
 
-        this.client = new RestTemplate();
-        client.getMessageConverters().add(new StringHttpMessageConverter());
-        TeacherDexActivity.Async async = new TeacherDexActivity.Async(this);
-        async.execute();
+        setAdapter(signedUser.getTeachers());
 
         createEnterCodeButtonEvent();
         createRankingsButtonEvent();
     }
 
-    public void setAdapter(List<Person> teacherList)
+    public void setAdapter(List<PersonEntry> teacherList)
     {
-        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this
+        ArrayAdapter<PersonEntry> adapter = new ArrayAdapter<>(this
                 ,android.R.layout.simple_list_item_1
                 ,android.R.id.text1
                 ,teacherList);
@@ -61,9 +59,9 @@ public class TeacherDexActivity extends AppCompatActivity {
         lvTeacherDex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                PersonEntry entry = (PersonEntry) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(),TeacherInfoActivity.class);
-                intent.putExtra("selectedTeacher",(Person)parent.getAdapter().getItem(position));
+                intent.putExtra("selectedTeacher",entry.getTeacher());
                 intent.putExtra("CurrentUser", signedUser);
                 startActivity(intent);
                 finish();
@@ -132,28 +130,5 @@ public class TeacherDexActivity extends AppCompatActivity {
                 .show();
     }
 
-    private class Async extends AsyncTask<Void, Void, List<Person>> {
 
-        private final TeacherDexActivity activity;
-
-        public Async(TeacherDexActivity activity)
-        {
-            this.activity = activity;
-            System.out.println("created Async");
-        }
-
-        @Override
-        protected List<Person> doInBackground(Void... params) {
-            System.out.println("wat.");
-            List<Person> temp = Arrays.asList(client.getForObject(APIConnection.getAPIConnectionInformationURL() + "people", Person[].class));
-            return temp;
-        }
-
-        @Override
-        protected void onPostExecute(List<Person> people)
-        {
-            System.out.println("in onPostExecute");
-            activity.setAdapter(people);
-        }
-    }
 }
