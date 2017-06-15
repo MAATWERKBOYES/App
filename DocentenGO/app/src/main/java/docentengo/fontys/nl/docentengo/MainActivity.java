@@ -16,9 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import Business.ApiController;
-import Business.PersonEntry;
-import Business.User;
+import api.ApiController;
+import business.PersonEntry;
+import business.User;
 
 import java.util.ArrayList;
 
@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 OpenTeacherDex(user);
             }
         }
+
     }
 
     private class registerUser extends AsyncTask<Void, Void, Void> {

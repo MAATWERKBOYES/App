@@ -1,21 +1,7 @@
-package Business;
+package api;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
-
-import docentengo.fontys.nl.docentengo.MainActivity;
 
 /**
  * Created by Jeroe on 2-6-2017.
