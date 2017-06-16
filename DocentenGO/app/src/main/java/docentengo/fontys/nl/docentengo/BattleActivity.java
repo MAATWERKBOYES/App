@@ -75,6 +75,14 @@ public class BattleActivity extends AppCompatActivity {
         finish();
     }
 
+    private void returnToEncounterScreen(boolean success){
+        Intent intent = new Intent(getApplicationContext(),EncounterActivity.class);
+        intent.putExtra("CurrentUser", loggedUser);
+        intent.putExtra("returnFromBattle", success);
+        startActivity(intent);
+        finish();
+    }
+
     private void loadQuestion(Question question){
         try{
             selectedQuestion = question;
@@ -93,9 +101,6 @@ public class BattleActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         answerQuestion(a);
-                        AlertHandler.showAlertDialog(BattleActivity.this, "Clicked!",
-                                "Id: " + a.getId() + ";\n" +
-                                        "Value: "+ a.getValue());
                     }
                 });
                 row.addView(selectButton);
@@ -115,12 +120,8 @@ public class BattleActivity extends AppCompatActivity {
             //correct answer
             BattleActivity.AnswerQuestionTask async = new BattleActivity.AnswerQuestionTask(loggedUser.getImei(), selectedTeacher.getId());
             async.execute();
-        }else{
-            //incorrect
-            AlertHandler.showAlertDialog(BattleActivity.this, "Wrong answer!",
-                    selectedTeacher.getSurName() + " got away safely.");
         }
-        returnToEncounterScreen();
+        returnToEncounterScreen(a.isCorrect());
     }
 
     //question/department/"name"

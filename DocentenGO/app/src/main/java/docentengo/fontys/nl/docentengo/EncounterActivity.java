@@ -21,24 +21,32 @@ public class EncounterActivity extends AppCompatActivity {
         Button submitButton = (Button) findViewById(R.id.btnEngage);
         EditText inputField = (EditText) findViewById(R.id.txtInput);
         initiateBattleScreen(submitButton, inputField);
-
+        if(getIntent().hasExtra("returnFromBattle")){
+            if((boolean)getIntent().getExtras().getSerializable("returnFromBattle")){
+                AlertHandler.showAlertDialog(EncounterActivity.this, "Correct!",
+                        "You caught a teacher, check your teacherdex to see it's data");
+            }else{
+                AlertHandler.showAlertDialog(EncounterActivity.this, "Wrong answer!",
+                        "Failed to catch the teacher, it ran away");
+            }
+        }
         apiController = new ApiController();
     }
 
     private void initiateBattleScreen(Button submitButton, final EditText inputField) {
         submitButton.setOnClickListener(new Button.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                if (inputField.getText().toString().isEmpty()) {
-                                                    AlertHandler.showAlertDialog(EncounterActivity.this,
-                                                            "Missing input",
-                                                            "Please enter the Teacher code.");
-                                                } else {
-                                                    GetTeacher getTeacher = new GetTeacher(inputField.getText().toString());
-                                                    getTeacher.execute();
-                                                }
-                                            }
-                                        }
+            @Override
+            public void onClick(View v) {
+                if (inputField.getText().toString().isEmpty()) {
+                    AlertHandler.showAlertDialog(EncounterActivity.this,
+                            "Missing input",
+                            "Please enter the Teacher code.");
+                } else {
+                    GetTeacher getTeacher = new GetTeacher(inputField.getText().toString());
+                    getTeacher.execute();
+                }
+            }
+        }
         );
         Button returnButton = (Button) findViewById(R.id.btnReturnDex);
         returnButton.setOnClickListener(new Button.OnClickListener() {
