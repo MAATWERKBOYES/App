@@ -11,7 +11,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-
+import Business.User;
 import api.APIConnection;
 import Business.Answer;
 import api.ApiController;
@@ -20,20 +20,25 @@ import Business.Person;
 import Business.Question;
 
 public class BattleActivity extends AppCompatActivity {
-
-private ApiController apiController;
+    private User loggedUser;
     private Person selectedTeacher;
+    private ApiController apiController;
+    private Question selectedQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
-        GetQuestions getQuestions = new GetQuestions();
-        getQuestions.execute();
+        if(getIntent().hasExtra("CurrentUser")) {
+            loggedUser = (User)getIntent().getExtras().getSerializable("CurrentUser");
+        }else{
+            AlertHandler.showAlertDialog(BattleActivity.this, "Pageload error!",
+                    "Loaded the page without a logged in user");
+        }
         loadTeacher();
         createRunButtonEvent();
-
-        BattleActivity.GetQuestions getQuestion = new BattleActivity.GetQuestions();
+        apiController = new ApiController();
+        BattleActivity.GetQuestions getQuestion = new BattleActivity.GetQuestions(this);
         getQuestion.execute();
     }
 
@@ -58,16 +63,22 @@ private ApiController apiController;
         returnDex.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),EncounterActivity.class);
-                intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
-                startActivity(intent);
-                finish();
+                returnToEncounterScreen();
             }
         });
     }
 
+    private void returnToEncounterScreen(){
+        Intent intent = new Intent(getApplicationContext(),EncounterActivity.class);
+        intent.putExtra("CurrentUser", loggedUser);
+        startActivity(intent);
+        finish();
+    }
+
     private void loadQuestion(Question question){
         try{
+            selectedQuestion = question;
+
             //load the question
             TextView statedQuestion = (TextView)findViewById(R.id.txtQuestion);
             statedQuestion.setText(question.getValue());
@@ -81,9 +92,10 @@ private ApiController apiController;
                 selectButton.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        answerQuestion(a);
                         AlertHandler.showAlertDialog(BattleActivity.this, "Clicked!",
                                 "Id: " + a.getId() + ";\n" +
-                                "Value: "+ a.getValue());
+                                        "Value: "+ a.getValue());
                     }
                 });
                 row.addView(selectButton);
@@ -97,19 +109,59 @@ private ApiController apiController;
         }
     }
 
+
+    public void answerQuestion(Answer a){
+        if(a.isCorrect()){
+            //correct answer
+            BattleActivity.AnswerQuestionTask async = new BattleActivity.AnswerQuestionTask(loggedUser.getImei(), selectedTeacher.getId());
+            async.execute();
+        }else{
+            //incorrect
+            AlertHandler.showAlertDialog(BattleActivity.this, "Wrong answer!",
+                    selectedTeacher.getSurName() + " got away safely.");
+        }
+        returnToEncounterScreen();
+    }
+
+    //question/department/"name"
     private class GetQuestions extends AsyncTask<Void, Void, Question> {
+        private final BattleActivity activity;
+
+        public GetQuestions(BattleActivity activity)
+        {
+            this.activity = activity;
+        }
 
         @Override
         protected Question doInBackground(Void... params) {
-            //TODO put to textboxes (Future)
-            //TODO Select correct question
             return apiController.getQuestionsFromTeacher(selectedTeacher);
         }
-            @Override
-            protected void onPostExecute (Question question){
-                System.out.println("in onPostExecute");
-                loadQuestion(question);
+
+        @Override
+        protected void onPostExecute(Question question) {
+            activity.loadQuestion(question);
+        }
+    }//user/'userID' post request met id teacher
+    //userID, QuestionID, request naar addperson(teacherID, userID)
+    private class AnswerQuestionTask extends AsyncTask<Void, Void, Void> {
+        private final String userId;
+        private final String teacherId;
+
+
+        public AnswerQuestionTask(String userId, String teacherId)
+        {
+            this.userId = userId;
+            this.teacherId = teacherId;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try{
+                apiController.answerQuestion(userId, teacherId);
+            }catch (Exception ex){
+                AlertHandler.showErrorDialog(BattleActivity.this, ex, "Connection error", "Failed to sent your answer to the server");
             }
+            return null;
         }
     }
-
+}
