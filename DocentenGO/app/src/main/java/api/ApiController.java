@@ -12,6 +12,8 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +25,7 @@ import java.util.List;
 import Business.Person;
 import Business.Question;
 import Business.User;
+import Business.RankingEntry;
 
 import static api.APIConnection.*;
 import static java.util.Collections.singletonList;
@@ -62,6 +65,10 @@ public class ApiController {
         return client.getForObject(getAPIConnectionInformationURL() + "user/" + secureID, User.class);
     }
 
+    public List<RankingEntry> getRanking() throws HttpClientErrorException {
+        return Arrays.asList(client.getForObject(getAPIConnectionInformationURL() + "user/ranking", RankingEntry[].class));
+    }
+
     public void registerUser(User user) throws HttpClientErrorException {
         String json;
         try {
@@ -79,5 +86,15 @@ public class ApiController {
         String url = getAPIConnectionInformationURL() + "user";
         client.postForObject(url, request, User.class);
     }
+    //Connect too users/'userID' and post the tearcherId
+    public void answerQuestion (String userId, String teacherId) throws HttpClientErrorException{
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+        parameters.add("personId", teacherId);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(parameters, headers);
+        client.postForEntity(getAPIConnectionInformationURL() + "user/" + userId, request, String.class);
+    }
 }

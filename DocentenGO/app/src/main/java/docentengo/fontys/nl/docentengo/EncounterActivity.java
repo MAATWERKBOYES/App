@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import api.ApiController;
 import Business.Person;
-
 import Business.User;
 
 public class EncounterActivity extends AppCompatActivity {
@@ -31,7 +29,7 @@ public class EncounterActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new Button.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                if (!testInput(inputField.getText().toString())) {
+                                                if (inputField.getText().toString().isEmpty()) {
                                                     AlertHandler.showAlertDialog(EncounterActivity.this,
                                                             "Missing input",
                                                             "Please enter the Teacher code.");
@@ -58,23 +56,23 @@ public class EncounterActivity extends AppCompatActivity {
         finish();
     }
 
-    private void OpenBattleScreen(String teacherCode) {
-        Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
-        intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
-        intent.putExtra("TeacherCode", teacherCode);
-        startActivity(intent);
-        finish();
-    }
-
-    private boolean testInput(String stringToTest) {
-        return !(stringToTest == null || stringToTest.trim().isEmpty());
+    public void loadBattle(Person teacher){
+        if(teacher != null){
+            Intent intent = new Intent(getApplicationContext(), BattleActivity.class);
+            intent.putExtra("CurrentUser", getIntent().getExtras().getSerializable("CurrentUser"));
+            intent.putExtra("SelectedTeacher", teacher);
+            startActivity(intent);
+            finish();
+        }else{
+            AlertHandler.showAlertDialog(EncounterActivity.this, "No teacher", "Tried to open the battle screen without a teacher");
+        }
     }
 
     private class GetTeacher extends AsyncTask<Void, Void, Person> {
         private String abbreviation;
 
         public GetTeacher(String abbreviation) {
-            this.abbreviation = abbreviation;
+            this.abbreviation = abbreviation.toLowerCase();
         }
 
         @Override
@@ -90,8 +88,8 @@ public class EncounterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Person person) {
-            if (person != null) {
-                OpenBattleScreen(person.getId());
+            if (person!=null) {
+                loadBattle(person);
             }
         }
     }
