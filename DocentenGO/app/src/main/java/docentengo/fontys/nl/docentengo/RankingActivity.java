@@ -5,12 +5,17 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.Collections;
+
 import java.util.List;
 
+import Business.Person;
+import Business.RankingEntry;
 import api.ApiController;
 import Business.User;
 
@@ -28,8 +33,31 @@ public class RankingActivity extends AppCompatActivity {
         this.apiController = new ApiController();
         lvRankings = (ListView) findViewById(R.id.lvRankings);
 
-        FillRankingList FillRankingList = new FillRankingList();
-        FillRankingList.execute();
+        RankingActivity.FillRankingList fillRankingList = new RankingActivity.FillRankingList(this);
+        fillRankingList.execute();
+    }
+
+    public void setAdapter(List<RankingEntry> rankings)
+    {
+        Collections.sort(rankings);
+        lvRankings = (ListView)findViewById(R.id.lvRankings);
+        ArrayAdapter<RankingEntry> adapter = new ArrayAdapter<>(this
+                ,android.R.layout.simple_list_item_1
+                ,android.R.id.text1
+                ,rankings);
+        lvRankings.setAdapter(adapter);
+
+        lvRankings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(getApplicationContext(),TeacherInfoActivity.class);
+                intent.putExtra("selectedTeacher",(Person)parent.getAdapter().getItem(position));
+                intent.putExtra("CurrentUser", signedUser);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void retrieveUser(){
@@ -55,22 +83,21 @@ public class RankingActivity extends AppCompatActivity {
         });
     }
 
-    public void setAdapter(List<User> users) {
-        if(users !=null) {
-            ArrayAdapter<User> adapter = new ArrayAdapter<>(this
-                    , android.R.layout.simple_list_item_1
-                    , android.R.id.text1
-                    , users);
-            lvRankings.setAdapter(adapter);
-        }
-    }
+    private class FillRankingList extends AsyncTask<Void, Void, List<RankingEntry>> {
 
-    private class FillRankingList extends AsyncTask<Void, Void, List<User>> {
+        private final RankingActivity activity;
+
+        public FillRankingList(RankingActivity activity)
+        {
+            this.activity = activity;
+            System.out.println("created Async");
+        }
+
         @Override
-        protected List<User> doInBackground(Void... params) {
+        protected List<RankingEntry> doInBackground(Void... params) {
             try
             {
-                return apiController.getAllUser();
+                return apiController.getRanking();
             }
             catch(Exception ex)
             {
@@ -81,9 +108,11 @@ public class RankingActivity extends AppCompatActivity {
                 return null;
             }
         }
+
         @Override
-        protected void onPostExecute(List<User> users) {
-            setAdapter(users);
+        protected void onPostExecute(List<RankingEntry> highscore)
+        {
+            activity.setAdapter(highscore);
         }
     }
 }
