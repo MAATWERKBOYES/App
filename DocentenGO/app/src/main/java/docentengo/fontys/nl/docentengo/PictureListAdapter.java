@@ -19,18 +19,24 @@ import Business.PersonEntry;
 public class PictureListAdapter extends ArrayAdapter<PersonEntry> {
 
     private final Activity context;
+    private final int id;
 
     public PictureListAdapter(Activity context, List<PersonEntry> personen) {
-        super(context, R.layout.picturelist, personen);
-        this.context = context;
+        this(context, R.layout.picturelist, personen);
+    }
 
+    public PictureListAdapter(Activity context, int listId, List<PersonEntry> personen) {
+        super(context, listId, personen);
+
+        this.id = listId;
+        this.context = context;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
 
-        View rowView = inflater.inflate(R.layout.picturelist, null, true);
+        View rowView = inflater.inflate(id, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.text1);
         txtTitle.setText(getItem(position).toString());
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);

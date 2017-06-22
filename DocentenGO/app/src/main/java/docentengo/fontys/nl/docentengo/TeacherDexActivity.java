@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +22,7 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Business.PersonEntry;
@@ -31,6 +31,9 @@ import api.ApiController;
 
 public class TeacherDexActivity extends AppCompatActivity implements BeaconConsumer {
     protected static final String TAG = "BeaconSearch";
+
+    private static boolean shouldBind = false;
+    private static ArrayList<String> beaconList = new ArrayList<>();
 
     private User signedUser;
     private ListView lvTeacherDex;
@@ -46,7 +49,6 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_dex);
-        lvTeacherDex = (ListView) findViewById(R.id.lvTeacherDex);
 
         lvTeacherDex = (ListView) findViewById(R.id.lvTeacherDex);
 
@@ -55,8 +57,10 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
             //If not disable the nearby teacher textView, listView en button.
             lvNearbyTeachers = (ListView) findViewById(R.id.lvNearbyTeachers);
             lvNearbyTeachers.setVisibility(View.GONE);
+
             TextView tvNearbyTeachers = (TextView) findViewById(R.id.tvNearbyTeachers);
             tvNearbyTeachers.setVisibility(View.GONE);
+
             Button btnSearchNearbyTeachers = (Button) findViewById(R.id.btnSearchNearbyTeachers);
             btnSearchNearbyTeachers.setVisibility(View.GONE);
         } else {
@@ -66,7 +70,7 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
             ListView lvNearbyTeachers = (ListView) findViewById(R.id.lvNearbyTeachers);
             lvNearbyTeachers.setVisibility(View.GONE);
 
-            lvTeacherDex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            lvNearbyTeachers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     PersonEntry entry = (PersonEntry) parent.getAdapter().getItem(position);
@@ -178,16 +182,20 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
             Button btnSearchNearbyTeachers = (Button) findViewById(R.id.btnSearchNearbyTeachers);
             btnSearchNearbyTeachers.setVisibility(View.GONE);
 
-            BeaconManager.setAndroidLScanningDisabled(true);
-            beaconManager = BeaconManager.getInstanceForApplication(this);//Sets auto beacon layout : m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25
-
-            //Only use this if the beacon layout is different from default.
-            beaconManager.getBeaconParsers().add(new BeaconParser().
-                    setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25")); //Deze shit moet nog aangepast worden naar onze beacon settings
-            beaconManager.bind(this);
-
-            bound = true;
+            bind();
         }
+    }
+
+    private void bind() {
+        BeaconManager.setAndroidLScanningDisabled(true);
+        beaconManager = BeaconManager.getInstanceForApplication(this);//Sets auto beacon layout : m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25
+
+        //Only use this if the beacon layout is different from default.
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25")); //Deze shit moet nog aangepast worden naar onze beacon settings
+        beaconManager.bind(this);
+        bound = true;
+        shouldBind = true;
     }
 
     @Override
@@ -206,6 +214,7 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
             @Override
             public void didEnterRegion(Region region) {
                 Log.i(TAG, "Beacon detected, UniqueID: " + region.getUniqueId());
+                beaconList.add(region.getUniqueId());
                 getTeachersFromBeacon(region.getUniqueId());
             }
 
@@ -240,19 +249,36 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
 
         this.runOnUiThread(new Runnable() {
             public void run() {
-                ArrayAdapter<PersonEntry> adapter = new ArrayAdapter<>(TeacherDexActivity.this
-                        , android.R.layout.simple_list_item_1
-                        , android.R.id.text1
-                        , teacherList);
+                PictureListAdapter adapter = new PictureListAdapter(TeacherDexActivity.this, teacherList);
+                lvNearbyTeachers.setAdapter(adapter);
 
-                lvTeacherDex.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 adapter.notifyDataSetInvalidated();
+
                 Log.i("UIRunnable", "LIJST ISNV DGTRHYRMJHTKHNFLAAR FATOE");
             }
         });
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i("onResume", "RESUME IS AANGEROEPEN.");
+        if (shouldBind) {
+            bind();
+
+            Log.i("onResume", "DE SHIT IS TRUE");
+            lvNearbyTeachers = (ListView) findViewById(R.id.lvNearbyTeachers);
+            lvNearbyTeachers.setVisibility(View.VISIBLE);
+            Button btnSearchNearbyTeachers = (Button) findViewById(R.id.btnSearchNearbyTeachers);
+            btnSearchNearbyTeachers.setVisibility(View.GONE);
+
+            if (beaconList.size() > 0) {
+                getTeachersFromBeacon("fatoe");
+            }
+        }
     }
 
     private class GetUpdatedUser extends AsyncTask<Void, Void, User> {
