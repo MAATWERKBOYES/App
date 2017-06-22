@@ -1,6 +1,8 @@
 package docentengo.fontys.nl.docentengo;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.util.List;
 
 import Business.PersonEntry;
@@ -20,20 +24,22 @@ import api.ApiController;
 public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;
     private ListView lvTeacherDex;
+    private ApiController apiController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_dex);
-
         lvTeacherDex = (ListView)findViewById(R.id.lvTeacherDex);
-
         System.out.println("Loaded page");
         retrieveUser();
         System.out.println("got the user");
         setPersonalDexName();
         System.out.println("set the dex name");
 
-        setAdapter(signedUser.getTeachers());
+        apiController = new ApiController();
+        GetUpdatedUser updateUser = new GetUpdatedUser();
+        updateUser.execute();
 
         createEnterCodeButtonEvent();
         createRankingsButtonEvent();
@@ -107,4 +113,26 @@ public class TeacherDexActivity extends AppCompatActivity {
         });
     }
 
+    private class GetUpdatedUser extends AsyncTask<Void, Void, User> {
+        @Override
+        protected User doInBackground(Void... params) {
+            try {
+                return apiController.loginUser(signedUser.getImei());
+            } catch (HttpClientErrorException ex) {
+                AlertHandler.showErrorDialog(TeacherDexActivity.this,
+                        ex,
+                        "Server connection error",
+                        "The application was unable to connect to the server.");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            if (user != null) {
+                signedUser = user;
+                setAdapter(signedUser.getTeachers());
+            }
+        }
+    }
 }

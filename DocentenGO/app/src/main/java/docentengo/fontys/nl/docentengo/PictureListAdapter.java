@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import Business.Person;
 import Business.PersonEntry;
 
 public class PictureListAdapter extends ArrayAdapter<PersonEntry> {
@@ -50,8 +49,6 @@ public class PictureListAdapter extends ArrayAdapter<PersonEntry> {
                 imageView.setImageResource(R.mipmap.business);
                 break;
         }
-
-
         return rowView;
     }
 
