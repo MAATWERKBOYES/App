@@ -1,10 +1,5 @@
 package docentengo.fontys.nl.docentengo;
 
-
-//Never forgetti
-//http://145.93.96.177:8080/people
-//http://145.93.96.177:8080/question
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.provider.Settings;
@@ -16,11 +11,13 @@ import android.widget.EditText;
 
 import org.springframework.web.client.HttpClientErrorException;
 
+import Business.Person;
 import api.ApiController;
 import Business.PersonEntry;
 import Business.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         apiController = new ApiController();
-
         Login Login = new Login();
         Login.execute();
 

@@ -2,6 +2,9 @@ package docentengo.fontys.nl.docentengo;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.springframework.web.client.HttpClientErrorException;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -31,7 +37,6 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
     protected static final String TAG = "BeaconSearch";
 
     private User signedUser;
-    private ApiController apiController;
     private ListView lvTeacherDex;
     private ListView lvNearbyTeachers;
     private BeaconManager beaconManager;
@@ -39,10 +44,13 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
 
     private int ACCES_FINE_LOCATION_PERMISSION_CODE = 69;
 
+    private ApiController apiController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_dex);
+        lvTeacherDex = (ListView)findViewById(R.id.lvTeacherDex);
 
         lvTeacherDex = (ListView) findViewById(R.id.lvTeacherDex);
 
@@ -82,22 +90,24 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
         setPersonalDexName();
         System.out.println("set the dex name");
 
-        setAdapter(signedUser.getTeachers());
+        apiController = new ApiController();
+        GetUpdatedUser updateUser = new GetUpdatedUser();
+        updateUser.execute();
 
         createEnterCodeButtonEvent();
         createRankingsButtonEvent();
     }
 
-    public void setAdapter(List<PersonEntry> teacherList) {
-        ArrayAdapter<PersonEntry> adapter = new ArrayAdapter<>(this
-                , android.R.layout.simple_list_item_1
-                , android.R.id.text1
-                , teacherList);
+    public void setAdapter(List<PersonEntry> teacherList)
+    {
+        PictureListAdapter adapter = new
+                PictureListAdapter(TeacherDexActivity.this, teacherList);
         lvTeacherDex.setAdapter(adapter);
-
         lvTeacherDex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
                 PersonEntry entry = (PersonEntry) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), TeacherInfoActivity.class);
                 intent.putExtra("selectedTeacher", entry);
@@ -106,6 +116,8 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
                 finish();
             }
         });
+        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetInvalidated();
     }
 
     private void retrieveUser() {
@@ -154,6 +166,28 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
         });
     }
 
+    private class GetUpdatedUser extends AsyncTask<Void, Void, User> {
+        @Override
+        protected User doInBackground(Void... params) {
+            try {
+                return apiController.loginUser(signedUser.getImei());
+            } catch (HttpClientErrorException ex) {
+                AlertHandler.showErrorDialog(TeacherDexActivity.this,
+                        ex,
+                        "Server connection error",
+                        "The application was unable to connect to the server.");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            if (user != null) {
+                signedUser = user;
+                setAdapter(signedUser.getTeachers());
+            }
+        }
+    }
     //Not in on click listener made for button because of request permission cannot be called from there.
     public void onSearchClick(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
