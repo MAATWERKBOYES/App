@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,12 +8,36 @@
 
 
     <TextView
-        android:id="@+id/tvDexName"
-        android:textSize="30dp"
+        android:id="@+id/tvNearbyTeachers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TeacherDex"
         android:gravity="center"
+        android:text="Nearby teachers"
+        android:textSize="30dp" />
+
+    <ListView
+        android:id="@+id/lvNearbyTeachers"
+        android:layout_width="match_parent"
+        android:layout_height="157dp" />
+
+    <Button
+        android:id="@+id/btnSearchNearbyTeachers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/FontysPurple"
+        android:onClick="onSearchClick"
+        android:text="Search nearby teachers"
+        android:textColor="@color/FontysWhite" />
+
+    <TextView
+        android:id="@+id/tvDexName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TeacherDex"
+        android:textSize="30dp"
         />
 
     <ListView
@@ -26,8 +49,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="51dp"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="3dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <Button
@@ -49,7 +72,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@color/FontysPurple"
-            android:textColor="@color/FontysWhite"
-            android:text="Rankings" />
+            android:text="Rankings"
+            android:textColor="@color/FontysWhite" />
     </LinearLayout>
 </LinearLayout>
