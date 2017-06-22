@@ -46,18 +46,6 @@ public class RankingActivity extends AppCompatActivity {
                 ,android.R.id.text1
                 ,rankings);
         lvRankings.setAdapter(adapter);
-
-        lvRankings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(getApplicationContext(),TeacherInfoActivity.class);
-                intent.putExtra("selectedTeacher",(Person)parent.getAdapter().getItem(position));
-                intent.putExtra("CurrentUser", signedUser);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
     private void retrieveUser(){
