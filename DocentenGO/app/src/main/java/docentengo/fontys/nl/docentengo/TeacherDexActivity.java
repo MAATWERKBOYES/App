@@ -19,7 +19,6 @@ import api.ApiController;
 
 public class TeacherDexActivity extends AppCompatActivity {
     private User signedUser;
-    private ApiController apiController;
     private ListView lvTeacherDex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

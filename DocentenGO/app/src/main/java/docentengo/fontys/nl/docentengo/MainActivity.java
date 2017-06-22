@@ -1,10 +1,5 @@
 package docentengo.fontys.nl.docentengo;
 
-
-//Never forgetti
-//http://145.93.96.177:8080/people
-//http://145.93.96.177:8080/question
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.provider.Settings;

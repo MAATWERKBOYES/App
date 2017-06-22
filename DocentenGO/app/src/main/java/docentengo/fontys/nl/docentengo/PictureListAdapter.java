@@ -37,16 +37,16 @@ public class PictureListAdapter extends ArrayAdapter<PersonEntry> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         switch (getItem(position).getTeacher().getDepartment())
         {
-            case "technology":
+            case "Team T":
                 imageView.setImageResource(R.mipmap.technology);
                 break;
-            case "software":
+            case "Team S":
                 imageView.setImageResource(R.mipmap.software);
                 break;
-            case "media":
+            case "Team M":
                 imageView.setImageResource(R.mipmap.media);
                 break;
-            case "business":
+            case "Team B":
                 imageView.setImageResource(R.mipmap.business);
                 break;
         }
