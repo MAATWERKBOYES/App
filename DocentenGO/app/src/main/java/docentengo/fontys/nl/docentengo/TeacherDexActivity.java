@@ -52,7 +52,7 @@ public class TeacherDexActivity extends AppCompatActivity {
                                     int position, long id) {
                 PersonEntry entry = (PersonEntry) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(),TeacherInfoActivity.class);
-                intent.putExtra("selectedTeacher",entry.getTeacher());
+                intent.putExtra("selectedTeacher",entry);
                 intent.putExtra("CurrentUser", signedUser);
                 startActivity(intent);
                 finish();

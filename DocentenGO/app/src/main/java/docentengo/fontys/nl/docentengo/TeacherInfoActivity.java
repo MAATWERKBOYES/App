@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.springframework.web.client.RestTemplate;
 
+import Business.PersonEntry;
 import api.APIConnection;
 import api.DownloadImageTask;
 import Business.Person;
@@ -42,30 +43,28 @@ public class TeacherInfoActivity extends AppCompatActivity {
 
     private void loadTeacherIntoGUI(){
         if(getIntent().hasExtra("selectedTeacher")){
-            Person person = (Person)getIntent().getExtras().getSerializable("selectedTeacher");
+            PersonEntry person = (PersonEntry)getIntent().getExtras().getSerializable("selectedTeacher");
             TextView name = (TextView)findViewById(R.id.txtTeacherName);
             TextView occupation = (TextView)findViewById(R.id.txtTeacherOccupation);
-            TextView title = (TextView)findViewById(R.id.txtTeacherTitle);
+            TextView level = (TextView)findViewById(R.id.txtTeacherLevel);
             TextView present = (TextView)findViewById(R.id.txtTeacherPresent);
             ImageView picture = (ImageView) findViewById(R.id.imgTeacher);
 
-            if(person.getPhoto() != null){
-                System.out.println(person.getPhoto());
+            if(person.getTeacher().getPhoto() != null){
+                System.out.println(person.getTeacher().getPhoto());
                 new DownloadImageTask((ImageView) findViewById(R.id.imgTeacher))
-                        .execute(person.getPhoto()+"?access_token="+APIConnection.getPictureToken());
+                        .execute(person.getTeacher().getPhoto()+"?access_token="+APIConnection.getPictureToken());
             }else{
                 new DownloadImageTask(picture)
                         .execute("https://api.fhict.nl/pictures/i870092.jpg?access_token="+APIConnection.getPictureToken());
             }
-            name.setText(person.getDisplayName());
-            occupation.setText(person.getDepartment());
-            if(person.getPersonalTitle() != null){
-                title.setText(person.getPersonalTitle().toString());
-            }
-            if(person.getPresent()){
-                present.setText("A wild " + person.getSurName() + " appeared...");
+            name.setText(person.getTeacher().getDisplayName());
+            occupation.setText(person.getTeacher().getDepartment());
+            level.setText(Integer.toString(person.getLevel()));
+            if(person.getTeacher().getPresent()){
+                present.setText(person.getTeacher().getGivenName() + " is roaming the Fontys");
             }else{
-                present.setText(person.getSurName() + " got away safely");
+                present.setText(person.getTeacher().getGivenName() + " not present anymore");
             }
         }else if(!getIntent().hasExtra("CurrentUser")){
             AlertHandler.showAlertDialog(
