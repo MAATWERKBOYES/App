@@ -96,8 +96,12 @@ public class EncounterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Person person) {
-            if (person!=null) {
-                loadBattle(person);
+            if (person!=null && !person.getDepartment().isEmpty()) {
+                if(person.getDepartment().equals("Team S") || person.getDepartment().equals("Team T") ||
+                        person.getDepartment().equals("Team M") || person.getDepartment().equals("Team B"))
+                    loadBattle(person);
+                else
+                    AlertHandler.showAlertDialog(EncounterActivity.this, "Invalid input", "The entered teacher code was invalid.");
             }
         }
     }
