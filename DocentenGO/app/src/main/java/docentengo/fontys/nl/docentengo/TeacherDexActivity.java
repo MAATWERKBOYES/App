@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 
@@ -174,9 +175,10 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
             beaconManager = BeaconManager.getInstanceForApplication(this);//Sets auto beacon layout : m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25
 
             //Only use this if the beacon layout is different from default.
-            //beaconManager.getBeaconParsers().add(new BeaconParser().
-            //      setBeaconLayout("m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25")); //Deze shit moet nog aangepast worden naar onze beacon settings
+            beaconManager.getBeaconParsers().add(new BeaconParser().
+                    setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25")); //Deze shit moet nog aangepast worden naar onze beacon settings
             beaconManager.bind(this);
+
             bound = true;
         }
     }
@@ -222,15 +224,27 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
     //Beetje prototype want kan nog niet docenten koppelen aan beacons.
     private void getTeachersFromBeacon(String uniqueId) {
         //Go to database and get teachers that are with the uniqueID
-
+        Log.i("Kutzooi", "ALLE FATOES ZIJN LELIJKSDKBFDKJJFSDNGFXNGFNDGJNFDGNJI");
         //Use getTeachers from signedUser as a test because I have no other teachers.
-        List<PersonEntry> teacherList = signedUser.getTeachers();
+        final List<PersonEntry> teacherList = signedUser.getTeachers();
+        for (PersonEntry p : teacherList) {
+            Log.i("Teacher", p.getTeacher().getGivenName());
+        }
 
-        ArrayAdapter<PersonEntry> adapter = new ArrayAdapter<>(this
-                , android.R.layout.simple_list_item_1
-                , android.R.id.text1
-                , teacherList);
-        lvTeacherDex.setAdapter(adapter);
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                ArrayAdapter<PersonEntry> adapter = new ArrayAdapter<>(TeacherDexActivity.this
+                        , android.R.layout.simple_list_item_1
+                        , android.R.id.text1
+                        , teacherList);
+
+                lvTeacherDex.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetInvalidated();
+                Log.i("UIRunnable", "LIJST ISNV DGTRHYRMJHTKHNFLAAR FATOE");
+            }
+        });
+
 
     }
 }
