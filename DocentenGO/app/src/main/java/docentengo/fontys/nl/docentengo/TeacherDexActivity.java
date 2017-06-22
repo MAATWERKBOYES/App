@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -41,15 +42,14 @@ public class TeacherDexActivity extends AppCompatActivity {
 
     public void setAdapter(List<PersonEntry> teacherList)
     {
-        ArrayAdapter<PersonEntry> adapter = new ArrayAdapter<>(this
-                ,android.R.layout.simple_list_item_1
-                ,android.R.id.text1
-                ,teacherList);
+        PictureListAdapter adapter = new
+                PictureListAdapter(TeacherDexActivity.this, teacherList);
         lvTeacherDex.setAdapter(adapter);
-
         lvTeacherDex.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
                 PersonEntry entry = (PersonEntry) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(),TeacherInfoActivity.class);
                 intent.putExtra("selectedTeacher",entry.getTeacher());
@@ -58,6 +58,8 @@ public class TeacherDexActivity extends AppCompatActivity {
                 finish();
             }
         });
+        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetInvalidated();
     }
 
     private void retrieveUser(){
