@@ -23,6 +23,7 @@ import org.altbeacon.beacon.Region;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import Business.PersonEntry;
@@ -221,6 +222,20 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "I no longer see the beacon with UniqueID: " + region.getUniqueId());
+
+                beaconList.remove(region.getUniqueId());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PictureListAdapter adapter = (PictureListAdapter) lvNearbyTeachers.getAdapter();
+                        adapter.clear();
+
+                        adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetInvalidated();
+                    }
+                });
+
             }
 
             //I think there is no use for this one yet.
@@ -242,7 +257,7 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
         //Go to database and get teachers that are with the uniqueID
         Log.i("Kutzooi", "ALLE FATOES ZIJN LELIJKSDKBFDKJJFSDNGFXNGFNDGJNFDGNJI");
         //Use getTeachers from signedUser as a test because I have no other teachers.
-        final List<PersonEntry> teacherList = signedUser.getTeachers();
+        final List<PersonEntry> teacherList = new LinkedList<>(signedUser.getTeachers());
         for (PersonEntry p : teacherList) {
             Log.i("Teacher", p.getTeacher().getGivenName());
         }
