@@ -35,18 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         apiController = new ApiController();
-        List<PersonEntry> personEntryList = new ArrayList<>();
-        Person person = new Person("1","testleraar","ka","pa","noob","Software",null,null,false);
-        Person person2 = new Person("2","testleraar2","ka","pa","noob","Software",null,null,false);
-        Person person3 = new Person("3","testleraar3","ka","pa","noob","Software",null,null,false);
-        Person person4 = new Person("4","testleraar4","ka","pa","noob","Software",null,null,false);
-
-        personEntryList.add(new PersonEntry(1,person));
-        personEntryList.add(new PersonEntry(1,person2));
-        personEntryList.add(new PersonEntry(1,person3));
-        personEntryList.add(new PersonEntry(1,person4));
-
-
         Login Login = new Login();
         Login.execute();
 
