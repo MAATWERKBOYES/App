@@ -2,14 +2,15 @@ package docentengo.fontys.nl.docentengo;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import api.ApiController;
+
 import Business.Person;
 import Business.User;
+import api.ApiController;
 
 public class EncounterActivity extends AppCompatActivity {
     private ApiController apiController;
@@ -96,8 +97,8 @@ public class EncounterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Person person) {
-            if (person!=null && !person.getDepartment().isEmpty()) {
-                if(person.getDepartment().equals("Team S") || person.getDepartment().equals("Team T") ||
+            if (person != null && !person.getDepartment().isEmpty()) {
+                if (person.getDepartment().equals("Team S") || person.getDepartment().equals("Team T") ||
                         person.getDepartment().equals("Team M") || person.getDepartment().equals("Team B"))
                     loadBattle(person);
                 else

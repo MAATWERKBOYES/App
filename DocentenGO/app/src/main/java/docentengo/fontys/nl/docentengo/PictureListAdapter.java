@@ -20,7 +20,7 @@ public class PictureListAdapter extends ArrayAdapter<PersonEntry> {
 
     private final Activity context;
 
-    public PictureListAdapter(Activity context,List<PersonEntry> personen) {
+    public PictureListAdapter(Activity context, List<PersonEntry> personen) {
         super(context, R.layout.picturelist, personen);
         this.context = context;
 
@@ -34,8 +34,7 @@ public class PictureListAdapter extends ArrayAdapter<PersonEntry> {
         TextView txtTitle = (TextView) rowView.findViewById(R.id.text1);
         txtTitle.setText(getItem(position).toString());
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-        switch (getItem(position).getTeacher().getDepartment())
-        {
+        switch (getItem(position).getTeacher().getDepartment()) {
             case "Team T":
                 imageView.setImageResource(R.mipmap.technology);
                 break;

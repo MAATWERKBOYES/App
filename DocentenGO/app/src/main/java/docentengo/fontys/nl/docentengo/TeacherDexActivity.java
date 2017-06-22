@@ -2,10 +2,8 @@ package docentengo.fontys.nl.docentengo;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -17,15 +15,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.springframework.web.client.HttpClientErrorException;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -50,7 +46,7 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_dex);
-        lvTeacherDex = (ListView)findViewById(R.id.lvTeacherDex);
+        lvTeacherDex = (ListView) findViewById(R.id.lvTeacherDex);
 
         lvTeacherDex = (ListView) findViewById(R.id.lvTeacherDex);
 
@@ -98,8 +94,7 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
         createRankingsButtonEvent();
     }
 
-    public void setAdapter(List<PersonEntry> teacherList)
-    {
+    public void setAdapter(List<PersonEntry> teacherList) {
         PictureListAdapter adapter = new
                 PictureListAdapter(TeacherDexActivity.this, teacherList);
         lvTeacherDex.setAdapter(adapter);
@@ -166,28 +161,6 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
         });
     }
 
-    private class GetUpdatedUser extends AsyncTask<Void, Void, User> {
-        @Override
-        protected User doInBackground(Void... params) {
-            try {
-                return apiController.loginUser(signedUser.getImei());
-            } catch (HttpClientErrorException ex) {
-                AlertHandler.showErrorDialog(TeacherDexActivity.this,
-                        ex,
-                        "Server connection error",
-                        "The application was unable to connect to the server.");
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(User user) {
-            if (user != null) {
-                signedUser = user;
-                setAdapter(signedUser.getTeachers());
-            }
-        }
-    }
     //Not in on click listener made for button because of request permission cannot be called from there.
     public void onSearchClick(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -280,5 +253,28 @@ public class TeacherDexActivity extends AppCompatActivity implements BeaconConsu
         });
 
 
+    }
+
+    private class GetUpdatedUser extends AsyncTask<Void, Void, User> {
+        @Override
+        protected User doInBackground(Void... params) {
+            try {
+                return apiController.loginUser(signedUser.getImei());
+            } catch (HttpClientErrorException ex) {
+                AlertHandler.showErrorDialog(TeacherDexActivity.this,
+                        ex,
+                        "Server connection error",
+                        "The application was unable to connect to the server.");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            if (user != null) {
+                signedUser = user;
+                setAdapter(signedUser.getTeachers());
+            }
+        }
     }
 }
